@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { LayoutDashboard, CalendarDays, Users, Settings, History, LogOut, Menu, X } from 'lucide-react';
+import { supabase } from '@/lib/supabase';
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   const router = useRouter();
@@ -12,12 +13,15 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   useEffect(() => {
-    const token = localStorage.getItem('pcs_token');
-    if (!token) {
-      router.push('/login');
-    } else {
-      setIsAuthenticated(true);
-    }
+    const checkAuth = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) {
+        router.push('/login');
+      } else {
+        setIsAuthenticated(true);
+      }
+    };
+    checkAuth();
   }, [router]);
 
   if (!isAuthenticated) return null;
@@ -30,8 +34,8 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     { label: 'Audit Log', href: '/admin/audit', icon: History },
   ];
 
-  const handleLogout = () => {
-    localStorage.removeItem('pcs_token');
+  const handleLogout = async () => {
+    await supabase.auth.signOut();
     router.push('/login');
   };
 

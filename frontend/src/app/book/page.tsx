@@ -4,6 +4,7 @@ import React, { useState, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { CheckCircle2, ChevronRight, ChevronLeft } from 'lucide-react';
 import { SERVICES, AC_TYPES, TIME_SLOTS, REGIONS, PROPERTY_TYPES } from '@/lib/constants';
+import { supabase, generateBookingId } from '@/lib/supabase';
 
 export default function BookPage() {
   return (
@@ -19,6 +20,7 @@ function BookPageContent() {
   const initialService = searchParams?.get('service') || '';
 
   const [step, setStep] = useState(1);
+  const [submitting, setSubmitting] = useState(false);
   const [formData, setFormData] = useState({
     serviceId: initialService,
     acType: '',
@@ -38,11 +40,39 @@ function BookPageContent() {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Mock API call
-    alert(`Success! Booking created. Reference ID: PCS-Mock123`);
-    router.push('/track');
+    setSubmitting(true);
+    try {
+      const id = await generateBookingId();
+      const serviceTitle = SERVICES.find(s => s.id === formData.serviceId)?.title || formData.serviceId;
+      
+      const { error } = await supabase.from('bookings').insert({
+        id,
+        service_package: serviceTitle,
+        appliance: formData.acType,
+        unit_count: Number(formData.units),
+        symptoms_notes: formData.problemDescription,
+        scheduled_date: formData.scheduledDate,
+        time_slot: formData.timeSlot,
+        region: formData.region,
+        property_type: formData.propertyType,
+        address: formData.fullAddress,
+        customer_name: formData.customerName,
+        phone: formData.customerPhone,
+        email: formData.customerEmail
+      });
+
+      if (error) throw error;
+      
+      alert(`Success! Booking created. Reference ID: ${id}`);
+      router.push('/track');
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : 'Unknown error';
+      alert(`Error creating booking: ${message}`);
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   const nextStep = () => setStep(s => Math.min(s + 1, 4));
@@ -198,8 +228,8 @@ function BookPageContent() {
                 <ChevronLeft className="w-4 h-4 mr-1" /> Back
               </button>
               
-              <button type="submit" className="flex items-center px-6 py-2.5 bg-cyan-500 hover:bg-cyan-400 text-brand-navy font-bold rounded-md shadow-sm transition-colors">
-                {step === 4 ? 'Confirm Booking' : 'Next Step'} {step < 4 && <ChevronRight className="w-4 h-4 ml-1" />}
+              <button type="submit" disabled={submitting} className="flex items-center px-6 py-2.5 bg-cyan-500 hover:bg-cyan-400 text-brand-navy font-bold rounded-md shadow-sm transition-colors">
+                {step === 4 ? (submitting ? 'Submitting...' : 'Confirm Booking') : 'Next Step'} {step < 4 && <ChevronRight className="w-4 h-4 ml-1" />}
               </button>
             </div>
           </form>

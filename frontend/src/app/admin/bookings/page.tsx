@@ -1,19 +1,40 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { StatusBadge } from '@/components/ui/StatusBadge';
 import { BOOKING_STATUSES } from '@/lib/constants';
+import { supabase } from '@/lib/supabase';
+
+interface BookingRow {
+  id: string;
+  customer_name: string;
+  service_package: string;
+  scheduled_date: string;
+  time_slot: string;
+  region: string;
+  status: string;
+  [key: string]: unknown;
+}
 
 export default function AdminBookingsPage() {
   const [filter, setFilter] = useState('ALL');
+  const [bookings, setBookings] = useState<BookingRow[]>([]);
 
-  const mockBookings = [
-    { id: 'PCS-8823', customer: 'Ali Khan', service: 'General AC Service', scheduled: '18 Sep, Morning', location: 'Model Town', status: 'IN_PROGRESS' },
-    { id: 'PCS-8824', customer: 'Zainab Ahmed', service: 'AC Installation', scheduled: '18 Sep, Evening', location: 'DHA', status: 'CONFIRMED' },
-    { id: 'PCS-8825', customer: 'Usman Tariq', service: 'Repair & Troubleshooting', scheduled: '19 Sep, Morning', location: 'Gulberg', status: 'NEW' },
-  ];
+  useEffect(() => {
+    fetchBookings();
+  }, []);
 
-  const filtered = filter === 'ALL' ? mockBookings : mockBookings.filter(b => b.status === filter);
+  const fetchBookings = async () => {
+    const { data } = await supabase.from('bookings').select('*').order('created_at', { ascending: false });
+    if (data) setBookings(data as BookingRow[]);
+  };
+
+  const updateStatus = async (id: string, newStatus: string) => {
+    await supabase.from('bookings').update({ status: newStatus }).eq('id', id);
+    fetchBookings();
+  };
+
+  const filtered = filter === 'ALL' ? bookings : bookings.filter(b => b.status === filter);
 
   return (
     <div className="space-y-6">
@@ -49,13 +70,19 @@ export default function AdminBookingsPage() {
               {filtered.map((booking) => (
                 <tr key={booking.id} className="hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors">
                   <td className="px-6 py-4 font-medium text-slate-900 dark:text-white whitespace-nowrap">{booking.id}</td>
-                  <td className="px-6 py-4 text-slate-600 dark:text-slate-400">{booking.customer}</td>
-                  <td className="px-6 py-4 text-slate-600 dark:text-slate-400">{booking.service}</td>
-                  <td className="px-6 py-4 text-slate-600 dark:text-slate-400 whitespace-nowrap">{booking.scheduled}</td>
-                  <td className="px-6 py-4 text-slate-600 dark:text-slate-400">{booking.location}</td>
-                  <td className="px-6 py-4 whitespace-nowrap"><StatusBadge status={booking.status} /></td>
-                  <td className="px-6 py-4 whitespace-nowrap text-cyan-600 dark:text-cyan-400 font-medium hover:underline cursor-pointer">
-                    Inspect
+                  <td className="px-6 py-4 text-slate-600 dark:text-slate-400">{booking.customer_name}</td>
+                  <td className="px-6 py-4 text-slate-600 dark:text-slate-400">{booking.service_package}</td>
+                  <td className="px-6 py-4 text-slate-600 dark:text-slate-400 whitespace-nowrap">{booking.scheduled_date} {booking.time_slot}</td>
+                  <td className="px-6 py-4 text-slate-600 dark:text-slate-400">{booking.region}</td>
+                  <td className="px-6 py-4 whitespace-nowrap"><StatusBadge status={booking.status || 'NEW'} /></td>
+                  <td className="px-6 py-4 whitespace-nowrap flex items-center gap-3">
+                    <select 
+                      value={booking.status || 'NEW'} 
+                      onChange={(e) => updateStatus(booking.id, e.target.value)}
+                      className="text-xs border border-slate-300 dark:border-slate-700 rounded px-2 py-1 bg-white dark:bg-slate-950 text-slate-900 dark:text-white focus:outline-none focus:ring-1 focus:ring-cyan-500"
+                    >
+                      {BOOKING_STATUSES.map(s => <option key={s} value={s}>{s}</option>)}
+                    </select>
                   </td>
                 </tr>
               ))}

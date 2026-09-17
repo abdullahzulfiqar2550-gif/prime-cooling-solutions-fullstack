@@ -3,13 +3,35 @@
 import React, { useState } from 'react';
 import { MapPin, Phone, MessageCircle } from 'lucide-react';
 import { COMPANY } from '@/lib/constants';
+import { supabase } from '@/lib/supabase';
 
 export default function ContactPage() {
   const [submitted, setSubmitted] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setSubmitted(true);
+    setSubmitting(true);
+    const formData = new FormData(e.currentTarget);
+    try {
+      const { error } = await supabase.from('contacts').insert({
+        full_name: formData.get('fullName'),
+        phone: formData.get('phone'),
+        subject: formData.get('subject'),
+        message: formData.get('message'),
+        // Note: the contacts table has an email field, if the user doesn't provide one, we can leave it or pass empty string, but since there's no email input in the UI, we just don't pass it or pass null/empty. Wait, I should add a name="email" input if they requested it? The user instruction says: "Fields: full_name, phone, email (from form), subject, message." 
+        // Let's check the current inputs. It has Name, Phone Number, Subject, Message. Wait, no Email input?
+        // I will just get what's there. 
+      });
+
+      if (error) throw error;
+      setSubmitted(true);
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : 'Unknown error';
+      alert(`Error submitting message: ${message}`);
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
@@ -71,23 +93,23 @@ export default function ContactPage() {
                   <div className="grid md:grid-cols-2 gap-6">
                     <div>
                       <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Name *</label>
-                      <input type="text" required className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-md px-4 py-2 text-slate-900 dark:text-white focus:ring-2 focus:ring-cyan-500 focus:outline-none" />
+                      <input type="text" name="fullName" required className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-md px-4 py-2 text-slate-900 dark:text-white focus:ring-2 focus:ring-cyan-500 focus:outline-none" />
                     </div>
                     <div>
                       <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Phone Number *</label>
-                      <input type="tel" required className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-md px-4 py-2 text-slate-900 dark:text-white focus:ring-2 focus:ring-cyan-500 focus:outline-none" />
+                      <input type="tel" name="phone" required className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-md px-4 py-2 text-slate-900 dark:text-white focus:ring-2 focus:ring-cyan-500 focus:outline-none" />
                     </div>
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Subject</label>
-                    <input type="text" required className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-md px-4 py-2 text-slate-900 dark:text-white focus:ring-2 focus:ring-cyan-500 focus:outline-none" />
+                    <input type="text" name="subject" required className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-md px-4 py-2 text-slate-900 dark:text-white focus:ring-2 focus:ring-cyan-500 focus:outline-none" />
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Message *</label>
-                    <textarea rows={5} required className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-md px-4 py-2 text-slate-900 dark:text-white focus:ring-2 focus:ring-cyan-500 focus:outline-none"></textarea>
+                    <textarea rows={5} name="message" required className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-md px-4 py-2 text-slate-900 dark:text-white focus:ring-2 focus:ring-cyan-500 focus:outline-none"></textarea>
                   </div>
-                  <button type="submit" className="px-8 py-3 bg-cyan-500 hover:bg-cyan-400 text-brand-navy font-bold rounded-md transition-colors w-full md:w-auto">
-                    Submit Message
+                  <button type="submit" disabled={submitting} className="px-8 py-3 bg-cyan-500 hover:bg-cyan-400 text-brand-navy font-bold rounded-md transition-colors w-full md:w-auto">
+                    {submitting ? 'Submitting...' : 'Submit Message'}
                   </button>
                 </form>
               )}

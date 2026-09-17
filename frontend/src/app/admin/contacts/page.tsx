@@ -1,12 +1,37 @@
 'use client';
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import { supabase } from '@/lib/supabase';
+
+interface ContactRow {
+  id: number;
+  full_name: string;
+  phone: string;
+  subject: string;
+  message: string;
+  status: string;
+  created_at: string;
+  [key: string]: unknown;
+}
 
 export default function AdminContactsPage() {
-  const mockContacts = [
-    { id: '1', name: 'Faizan', phone: '0321-1122334', subject: 'Inquiry about AMC', date: '2026-09-15', status: 'NEW' },
-    { id: '2', name: 'Sara', phone: '0300-9988776', subject: 'Emergency Repair', date: '2026-09-14', status: 'REPLIED' },
-  ];
+  const [contacts, setContacts] = useState<ContactRow[]>([]);
+  const [fetched, setFetched] = useState(false);
+
+  useEffect(() => {
+    fetchContacts();
+  }, []);
+
+  const fetchContacts = async () => {
+    const { data } = await supabase.from('contacts').select('*').order('created_at', { ascending: false });
+    if (data) setContacts(data as ContactRow[]);
+    setFetched(true);
+  };
+
+  const updateStatus = async (id: number, newStatus: string) => {
+    await supabase.from('contacts').update({ status: newStatus }).eq('id', id);
+    fetchContacts();
+  };
 
   return (
     <div className="space-y-6">
@@ -28,10 +53,12 @@ export default function AdminContactsPage() {
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-200 dark:divide-slate-800">
-              {mockContacts.map((contact) => (
+              {contacts.map((contact) => (
                 <tr key={contact.id} className="hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors">
-                  <td className="px-6 py-4 text-slate-600 dark:text-slate-400 whitespace-nowrap">{contact.date}</td>
-                  <td className="px-6 py-4 font-medium text-slate-900 dark:text-white">{contact.name}</td>
+                  <td className="px-6 py-4 text-slate-600 dark:text-slate-400 whitespace-nowrap">
+                    {new Date(contact.created_at).toLocaleDateString()}
+                  </td>
+                  <td className="px-6 py-4 font-medium text-slate-900 dark:text-white">{contact.full_name}</td>
                   <td className="px-6 py-4 text-slate-600 dark:text-slate-400 whitespace-nowrap">{contact.phone}</td>
                   <td className="px-6 py-4 text-slate-600 dark:text-slate-400">{contact.subject}</td>
                   <td className="px-6 py-4 whitespace-nowrap">
@@ -39,14 +66,27 @@ export default function AdminContactsPage() {
                       contact.status === 'NEW' ? 'bg-amber-100 text-amber-800 border-amber-200 dark:bg-amber-900/30 dark:text-amber-400 dark:border-amber-800' :
                       'bg-green-100 text-green-800 border-green-200 dark:bg-green-900/30 dark:text-green-400 dark:border-green-800'
                     }`}>
-                      {contact.status}
+                      {contact.status || 'NEW'}
                     </span>
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-cyan-600 dark:text-cyan-400 font-medium hover:underline cursor-pointer">
-                    View
+                  <td className="px-6 py-4 whitespace-nowrap flex items-center gap-3">
+                    <select 
+                      value={contact.status || 'NEW'} 
+                      onChange={(e) => updateStatus(contact.id, e.target.value)}
+                      className="text-xs border border-slate-300 dark:border-slate-700 rounded px-2 py-1 bg-white dark:bg-slate-950 text-slate-900 dark:text-white focus:outline-none focus:ring-1 focus:ring-cyan-500"
+                    >
+                      <option value="NEW">NEW</option>
+                      <option value="REPLIED">REPLIED</option>
+                      <option value="RESOLVED">RESOLVED</option>
+                    </select>
                   </td>
                 </tr>
               ))}
+              {contacts.length === 0 && fetched && (
+                <tr>
+                  <td colSpan={6} className="px-6 py-8 text-center text-slate-500">No contacts found.</td>
+                </tr>
+              )}
             </tbody>
           </table>
         </div>
