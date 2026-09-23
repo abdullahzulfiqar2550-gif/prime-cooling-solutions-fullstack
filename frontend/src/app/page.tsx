@@ -2,14 +2,86 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
-import * as LucideIcons from 'lucide-react';
+import Image from 'next/image';
+import {
+  Shield,
+  Phone,
+  CheckCircle2,
+  Award,
+  CheckCircle,
+  ArrowRight,
+  PhoneCall,
+  CalendarCheck,
+  Snowflake,
+  ArrowDown,
+  Loader2,
+  Search,
+  Wrench,
+  Hammer,
+  PackageMinus,
+  Droplets,
+  Settings,
+  Gauge,
+  Pipette,
+  Zap,
+  ShieldCheck,
+  FileCheck,
+  GlassWater,
+  Refrigerator,
+  Building2,
+  GraduationCap,
+  Store,
+  Scissors,
+  Users,
+  Briefcase,
+  ClipboardList,
+  Activity,
+  MessageSquare,
+  FileText,
+  HardHat,
+  Target,
+  Eye,
+} from 'lucide-react';
 import { COMPANY, SERVICES, WHY_CHOOSE_US, SERVICE_METHODOLOGY, CLIENT_SEGMENTS, AMC_DETAILS, AC_TYPES, TIME_SLOTS, REGIONS, PROPERTY_TYPES } from '@/lib/constants';
 import { supabase, generateBookingId } from '@/lib/supabase';
 
-function DynamicIcon({ name, className }: { name: string, className?: string }) {
-  const icons = LucideIcons as unknown as Record<string, React.ComponentType<{ className?: string }>>;
-  const Icon = icons[name];
-  return Icon ? <Icon className={className} /> : <LucideIcons.Check className={className} />;
+/* ─── Icon map for dynamic icon rendering (avoids import *) ──────────── */
+const ICON_MAP: Record<string, React.ComponentType<{ className?: string }>> = {
+  Search,
+  Wrench,
+  Hammer,
+  PackageMinus,
+  Droplets,
+  Settings,
+  Gauge,
+  Pipette,
+  Zap,
+  ShieldCheck,
+  FileCheck,
+  GlassWater,
+  Refrigerator,
+  Building2,
+  GraduationCap,
+  Store,
+  Scissors,
+  Users,
+  Briefcase,
+  PhoneCall,
+  ClipboardList,
+  Activity,
+  MessageSquare,
+  CheckCircle,
+  FileText,
+  HardHat,
+  Award,
+  Target,
+  Eye,
+  Check: CheckCircle,
+};
+
+function DIcon({ name, className }: { name: string; className?: string }) {
+  const Icon = ICON_MAP[name];
+  return Icon ? <Icon className={className} /> : <CheckCircle className={className} />;
 }
 
 export default function HomePage() {
@@ -76,74 +148,122 @@ export default function HomePage() {
   return (
     <div className="flex flex-col min-h-screen">
       {/* ═══════════════════════════════════════════════════════════
-          Section 1: HERO — Clean, no form, Book Now scrolls down
+          Section 1: HERO — Modern industrial look with HVAC background
          ═══════════════════════════════════════════════════════════ */}
-      <section className="relative bg-slate-900 text-white overflow-hidden py-20 lg:py-32">
-        <div className="absolute inset-0 z-0 opacity-20">
-          <div className="absolute inset-0 bg-gradient-to-r from-brand-navy to-brand-cyan/20" />
+      <section className="relative text-white overflow-hidden py-20 lg:py-32">
+        {/* Background image + dark overlay */}
+        <div className="absolute inset-0 z-0">
+          <Image
+            src="https://images.unsplash.com/photo-1621905251189-08b45d6a269e?auto=format&fit=crop&q=80&w=2000"
+            alt="Professional HVAC engineer servicing an air conditioning unit"
+            fill
+            className="object-cover"
+            priority
+          />
+          <div className="absolute inset-0 bg-slate-900/80" />
+          <div className="absolute inset-0 bg-gradient-to-r from-brand-navy/60 to-brand-cyan/10" />
         </div>
+
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center lg:text-left flex flex-col lg:flex-row items-center gap-12">
           <div className="lg:w-3/5">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-800/80 border border-slate-700 text-xs font-medium text-cyan-400 mb-6">
-              <LucideIcons.Shield className="w-4 h-4" />
+              <Shield className="w-4 h-4" aria-hidden="true" />
               Engineering-Led HVAC Service • Kot Lakhpat, Lahore
             </div>
+
+            {/* PCS Logo */}
+            <div className="mb-6 flex justify-center lg:justify-start">
+              <Image
+                src="/logo.png"
+                alt="Prime Cooling Solutions logo"
+                width={80}
+                height={80}
+                className="rounded-xl"
+              />
+            </div>
+
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight mb-6 leading-tight">
-              Engineered Service.<br />
+              Professional HVAC Solutions<br />
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-teal-400">
-                Professional Standards.
+                Built for Reliability.
               </span>
             </h1>
             <p className="text-lg md:text-xl text-slate-300 mb-8 max-w-2xl leading-relaxed">
-              Professional AC service for business premises and homes in Lahore. We deliver documented, preventive care to keep your environment perfectly cooled.
+              Engineering-led air conditioning installation, maintenance &amp; repair services for commercial &amp; residential premises across Lahore.
             </p>
+
+            {/* 3 CTAs */}
             <div className="flex flex-wrap gap-4 mb-10 justify-center lg:justify-start">
               <button
                 onClick={scrollToBooking}
+                aria-label="Book a service — scroll to booking form"
                 className="px-8 py-4 rounded-md bg-gradient-to-r from-cyan-500 to-teal-500 hover:from-cyan-400 hover:to-teal-400 text-slate-900 font-bold text-lg shadow-glow-cyan transition-all flex items-center gap-3"
               >
-                <LucideIcons.CalendarCheck className="w-6 h-6" />
-                Book Now
+                <CalendarCheck className="w-6 h-6" aria-hidden="true" />
+                Book Service
               </button>
-              <a href={`tel:${COMPANY.phone.replace(/-/g, '')}`} className="px-6 py-4 rounded-md bg-transparent border-2 border-slate-700 hover:border-cyan-500 text-white font-semibold transition-all text-center flex items-center gap-2">
-                <LucideIcons.Phone className="w-5 h-5" />
-                Call / WhatsApp
+              <a
+                href={`tel:${COMPANY.phone.replace(/-/g, '')}`}
+                aria-label={`Call us at ${COMPANY.phone}`}
+                className="px-6 py-4 rounded-md bg-transparent border-2 border-slate-700 hover:border-cyan-500 text-white font-semibold transition-all text-center flex items-center gap-2"
+              >
+                <Phone className="w-5 h-5" aria-hidden="true" />
+                Call Now
+              </a>
+              <a
+                href={`https://wa.me/${COMPANY.whatsapp}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Chat with us on WhatsApp"
+                className="px-6 py-4 rounded-md bg-green-600 hover:bg-green-500 border-2 border-green-600 hover:border-green-500 text-white font-semibold transition-all text-center flex items-center gap-2"
+              >
+                <Phone className="w-5 h-5" aria-hidden="true" />
+                WhatsApp
               </a>
             </div>
+
+            {/* Trust indicators */}
             <div className="flex flex-wrap gap-6 text-sm font-medium text-slate-400 justify-center lg:justify-start">
-              <span className="flex items-center gap-2"><LucideIcons.CheckCircle2 className="text-teal-400 w-5 h-5" /> 4+ Years Experience</span>
-              <span className="flex items-center gap-2"><LucideIcons.CheckCircle2 className="text-teal-400 w-5 h-5" /> Engineering-Led</span>
-              <span className="flex items-center gap-2"><LucideIcons.CheckCircle2 className="text-teal-400 w-5 h-5" /> Documented Service</span>
+              <span className="flex items-center gap-2"><CheckCircle2 className="text-teal-400 w-5 h-5" aria-hidden="true" /> 4+ Years Experience</span>
+              <span className="flex items-center gap-2"><CheckCircle2 className="text-teal-400 w-5 h-5" aria-hidden="true" /> Engineering-Led</span>
+              <span className="flex items-center gap-2"><CheckCircle2 className="text-teal-400 w-5 h-5" aria-hidden="true" /> Documented Service</span>
             </div>
           </div>
 
-          {/* Hero right side — Stats card instead of form */}
+          {/* Hero right side — Stats card */}
           <div className="lg:w-2/5 w-full max-w-md">
             <div className="bg-slate-800/50 backdrop-blur-md border border-slate-700 rounded-xl p-8 shadow-2xl text-center">
               <div className="w-16 h-16 rounded-full bg-gradient-to-r from-cyan-500 to-teal-500 flex items-center justify-center mx-auto mb-6">
-                <LucideIcons.Snowflake className="w-8 h-8 text-white" />
+                <Snowflake className="w-8 h-8 text-white" aria-hidden="true" />
               </div>
               <h3 className="text-2xl font-bold text-white mb-2">Need AC Service?</h3>
               <p className="text-slate-400 mb-6">Schedule a professional inspection in under 2 minutes</p>
-              <div className="grid grid-cols-3 gap-4 mb-6">
+
+              {/* Trust stats bar */}
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">
                 <div className="bg-slate-900/60 rounded-lg p-3">
-                  <div className="text-2xl font-bold text-cyan-400">13</div>
+                  <div className="text-2xl font-bold text-cyan-400">4+</div>
+                  <div className="text-[10px] text-slate-400 uppercase font-medium">Years</div>
+                </div>
+                <div className="bg-slate-900/60 rounded-lg p-3">
+                  <div className="text-2xl font-bold text-teal-400">500+</div>
+                  <div className="text-[10px] text-slate-400 uppercase font-medium">Jobs</div>
+                </div>
+                <div className="bg-slate-900/60 rounded-lg p-3">
+                  <div className="text-2xl font-bold text-amber-400">13</div>
                   <div className="text-[10px] text-slate-400 uppercase font-medium">Services</div>
                 </div>
                 <div className="bg-slate-900/60 rounded-lg p-3">
-                  <div className="text-2xl font-bold text-teal-400">4+</div>
-                  <div className="text-[10px] text-slate-400 uppercase font-medium">Years Exp</div>
-                </div>
-                <div className="bg-slate-900/60 rounded-lg p-3">
-                  <div className="text-2xl font-bold text-amber-400">10</div>
-                  <div className="text-[10px] text-slate-400 uppercase font-medium">AMC Visits</div>
+                  <div className="text-2xl font-bold text-cyan-400">10</div>
+                  <div className="text-[10px] text-slate-400 uppercase font-medium">AMC Visits/Yr</div>
                 </div>
               </div>
               <button
                 onClick={scrollToBooking}
+                aria-label="Scroll down to book a service"
                 className="w-full bg-cyan-500 hover:bg-cyan-400 text-slate-900 font-bold py-3 rounded-md transition-colors flex items-center justify-center gap-2"
               >
-                <LucideIcons.ArrowDown className="w-5 h-5" />
+                <ArrowDown className="w-5 h-5" aria-hidden="true" />
                 Book Service Below
               </button>
             </div>
@@ -164,14 +284,14 @@ export default function HomePage() {
             {primaryServices.map((service) => (
               <div key={service.id} className="bg-white dark:bg-slate-900 rounded-xl p-6 shadow-sm border border-slate-200 dark:border-slate-800 hover:shadow-md transition-shadow flex flex-col h-full group">
                 <div className="w-12 h-12 bg-cyan-100 dark:bg-slate-800 rounded-lg flex items-center justify-center mb-6 text-cyan-600 dark:text-cyan-400 group-hover:scale-110 transition-transform">
-                  <DynamicIcon name={service.icon} className="w-6 h-6" />
+                  <DIcon name={service.icon} className="w-6 h-6" />
                 </div>
                 <h3 className="text-xl font-semibold mb-3 text-slate-900 dark:text-white">{service.title}</h3>
                 <p className="text-slate-600 dark:text-slate-400 mb-6 flex-grow">{service.description}</p>
                 <div className="flex items-center justify-between mt-auto pt-4 border-t border-slate-100 dark:border-slate-800">
                   <span className="font-semibold text-teal-600 dark:text-teal-400">{service.priceText}</span>
-                  <button onClick={scrollToBooking} className="text-sm font-medium text-cyan-600 dark:text-cyan-400 hover:underline inline-flex items-center gap-1">
-                    Book Now <LucideIcons.ArrowRight className="w-4 h-4" />
+                  <button onClick={scrollToBooking} aria-label={`Book ${service.title}`} className="text-sm font-medium text-cyan-600 dark:text-cyan-400 hover:underline inline-flex items-center gap-1">
+                    Book Now <ArrowRight className="w-4 h-4" aria-hidden="true" />
                   </button>
                 </div>
               </div>
@@ -179,7 +299,7 @@ export default function HomePage() {
           </div>
           <div className="text-center mt-12">
             <Link href="/services" className="inline-flex items-center gap-2 text-slate-900 dark:text-white font-medium hover:text-cyan-600 dark:hover:text-cyan-400 transition-colors">
-              View All Services <LucideIcons.ArrowRight className="w-5 h-5" />
+              View All Services <ArrowRight className="w-5 h-5" aria-hidden="true" />
             </Link>
           </div>
         </div>
@@ -199,7 +319,7 @@ export default function HomePage() {
               <div key={i} className="flex gap-4 p-4">
                 <div className="flex-shrink-0 mt-1">
                   <div className="w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-cyan-500">
-                    <DynamicIcon name={reason.icon} className="w-5 h-5" />
+                    <DIcon name={reason.icon} className="w-5 h-5" />
                   </div>
                 </div>
                 <div>
@@ -221,7 +341,7 @@ export default function HomePage() {
             <div className="grid grid-cols-1 lg:grid-cols-2">
               <div className="p-10 lg:p-12 flex flex-col justify-center">
                 <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-500/10 text-cyan-400 text-sm font-medium mb-6 w-fit">
-                  <LucideIcons.Award className="w-4 h-4" /> Highly Recommended for Businesses
+                  <Award className="w-4 h-4" aria-hidden="true" /> Highly Recommended for Businesses
                 </div>
                 <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">Annual Maintenance Contract</h2>
                 <p className="text-slate-300 mb-8 text-lg">Year-round peace of mind. We take full responsibility for your cooling infrastructure.</p>
@@ -230,13 +350,13 @@ export default function HomePage() {
                   <span className="text-slate-400 font-medium">/ AC / Year</span>
                 </div>
                 <ul className="space-y-4 mb-8">
-                  <li className="flex items-center gap-3 text-slate-300"><LucideIcons.CheckCircle className="text-teal-400 w-5 h-5" /> {AMC_DETAILS.pmVisits} Preventive Maintenance Visits</li>
-                  <li className="flex items-center gap-3 text-slate-300"><LucideIcons.CheckCircle className="text-teal-400 w-5 h-5" /> Up to {AMC_DETAILS.breakdownVisits} Breakdown Response Visits</li>
-                  <li className="flex items-center gap-3 text-slate-300"><LucideIcons.CheckCircle className="text-teal-400 w-5 h-5" /> Documented Service Reports</li>
+                  <li className="flex items-center gap-3 text-slate-300"><CheckCircle className="text-teal-400 w-5 h-5" aria-hidden="true" /> {AMC_DETAILS.pmVisits} Preventive Maintenance Visits</li>
+                  <li className="flex items-center gap-3 text-slate-300"><CheckCircle className="text-teal-400 w-5 h-5" aria-hidden="true" /> Up to {AMC_DETAILS.breakdownVisits} Breakdown Response Visits</li>
+                  <li className="flex items-center gap-3 text-slate-300"><CheckCircle className="text-teal-400 w-5 h-5" aria-hidden="true" /> Documented Service Reports</li>
                 </ul>
                 <div>
-                  <Link href="/amc" className="inline-flex items-center gap-2 bg-white text-brand-navy px-6 py-3 rounded-md font-semibold hover:bg-slate-100 transition-colors">
-                    Learn More About AMC <LucideIcons.ArrowRight className="w-4 h-4" />
+                  <Link href="/amc" aria-label="Learn more about Annual Maintenance Contract" className="inline-flex items-center gap-2 bg-white text-brand-navy px-6 py-3 rounded-md font-semibold hover:bg-slate-100 transition-colors">
+                    Learn More About AMC <ArrowRight className="w-4 h-4" aria-hidden="true" />
                   </Link>
                 </div>
               </div>
@@ -267,7 +387,7 @@ export default function HomePage() {
                     {step.step}
                   </div>
                   <h4 className="text-sm font-semibold text-slate-900 dark:text-white mb-1">{step.title}</h4>
-                  <DynamicIcon name={step.icon} className="w-4 h-4 text-slate-400 mt-2" />
+                  <DIcon name={step.icon} className="w-4 h-4 text-slate-400 mt-2" />
                 </div>
               ))}
             </div>
@@ -286,7 +406,7 @@ export default function HomePage() {
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6">
             {CLIENT_SEGMENTS.map((segment, i) => (
               <div key={i} className="bg-white dark:bg-slate-900 p-6 rounded-xl text-center border border-slate-200 dark:border-slate-800 hover:border-cyan-500 transition-colors">
-                <DynamicIcon name={segment.icon} className="w-8 h-8 mx-auto text-teal-500 mb-4" />
+                <DIcon name={segment.icon} className="w-8 h-8 mx-auto text-teal-500 mb-4" />
                 <h4 className="text-sm font-semibold text-slate-900 dark:text-white">{segment.title}</h4>
               </div>
             ))}
@@ -302,7 +422,7 @@ export default function HomePage() {
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-cyan-100 dark:bg-cyan-900/30 text-cyan-700 dark:text-cyan-400 text-sm font-medium mb-4">
-              <LucideIcons.CalendarCheck className="w-4 h-4" /> Online Booking
+              <CalendarCheck className="w-4 h-4" aria-hidden="true" /> Online Booking
             </div>
             <h2 className="text-3xl md:text-4xl font-bold text-slate-900 dark:text-white mb-4">Book Your Service</h2>
             <p className="text-lg text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">
@@ -313,16 +433,16 @@ export default function HomePage() {
           {bookingSuccess ? (
             <div className="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-xl p-8 text-center">
               <div className="w-16 h-16 rounded-full bg-green-100 dark:bg-green-900/40 flex items-center justify-center mx-auto mb-4">
-                <LucideIcons.CheckCircle2 className="w-8 h-8 text-green-600 dark:text-green-400" />
+                <CheckCircle2 className="w-8 h-8 text-green-600 dark:text-green-400" aria-hidden="true" />
               </div>
               <h3 className="text-2xl font-bold text-green-800 dark:text-green-300 mb-2">Booking Confirmed!</h3>
               <p className="text-green-700 dark:text-green-400 mb-4">Your Reference ID: <span className="font-mono font-bold text-lg">{bookingSuccess}</span></p>
               <p className="text-slate-600 dark:text-slate-400 mb-6">We&apos;ll contact you shortly on WhatsApp to confirm details.</p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <Link href={`/track`} className="px-6 py-3 bg-green-600 hover:bg-green-500 text-white font-bold rounded-md transition-colors inline-flex items-center gap-2">
-                  <LucideIcons.Search className="w-4 h-4" /> Track Booking
+                <Link href={`/track`} aria-label="Track your booking status" className="px-6 py-3 bg-green-600 hover:bg-green-500 text-white font-bold rounded-md transition-colors inline-flex items-center gap-2">
+                  <Search className="w-4 h-4" aria-hidden="true" /> Track Booking
                 </Link>
-                <button onClick={() => setBookingSuccess('')} className="px-6 py-3 border border-slate-300 dark:border-slate-700 text-slate-700 dark:text-slate-300 font-medium rounded-md hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors">
+                <button onClick={() => setBookingSuccess('')} aria-label="Book another service" className="px-6 py-3 border border-slate-300 dark:border-slate-700 text-slate-700 dark:text-slate-300 font-medium rounded-md hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors">
                   Book Another Service
                 </button>
               </div>
@@ -332,15 +452,15 @@ export default function HomePage() {
               {/* Row 1: Service + AC Type */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                 <div>
-                  <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Service Required *</label>
-                  <select required name="serviceId" value={formData.serviceId} onChange={handleChange} className="w-full bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-md px-4 py-2.5 text-slate-900 dark:text-white focus:ring-2 focus:ring-cyan-500 focus:outline-none">
+                  <label htmlFor="serviceId" className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Service Required *</label>
+                  <select required id="serviceId" name="serviceId" value={formData.serviceId} onChange={handleChange} className="w-full bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-md px-4 py-2.5 text-slate-900 dark:text-white focus:ring-2 focus:ring-cyan-500 focus:outline-none">
                     <option value="">-- Select a Service --</option>
                     {SERVICES.map(s => <option key={s.id} value={s.id}>{s.title} — {s.priceText}</option>)}
                   </select>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">AC Type *</label>
-                  <select required name="acType" value={formData.acType} onChange={handleChange} className="w-full bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-md px-4 py-2.5 text-slate-900 dark:text-white focus:ring-2 focus:ring-cyan-500 focus:outline-none">
+                  <label htmlFor="acType" className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">AC Type *</label>
+                  <select required id="acType" name="acType" value={formData.acType} onChange={handleChange} className="w-full bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-md px-4 py-2.5 text-slate-900 dark:text-white focus:ring-2 focus:ring-cyan-500 focus:outline-none">
                     <option value="">-- Select Type --</option>
                     {AC_TYPES.map(t => <option key={t.value} value={t.value}>{t.label}</option>)}
                   </select>
@@ -350,27 +470,27 @@ export default function HomePage() {
               {/* Row 2: Units + Date */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                 <div>
-                  <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Number of Units *</label>
-                  <input type="number" required min="1" max="20" name="units" value={formData.units} onChange={handleChange} className="w-full bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-md px-4 py-2.5 text-slate-900 dark:text-white focus:ring-2 focus:ring-cyan-500 focus:outline-none" />
+                  <label htmlFor="units" className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Number of Units *</label>
+                  <input type="number" required min="1" max="20" id="units" name="units" value={formData.units} onChange={handleChange} className="w-full bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-md px-4 py-2.5 text-slate-900 dark:text-white focus:ring-2 focus:ring-cyan-500 focus:outline-none" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Preferred Date *</label>
-                  <input type="date" required name="scheduledDate" value={formData.scheduledDate} onChange={handleChange} className="w-full bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-md px-4 py-2.5 text-slate-900 dark:text-white focus:ring-2 focus:ring-cyan-500 focus:outline-none" />
+                  <label htmlFor="scheduledDate" className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Preferred Date *</label>
+                  <input type="date" required id="scheduledDate" name="scheduledDate" value={formData.scheduledDate} onChange={handleChange} className="w-full bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-md px-4 py-2.5 text-slate-900 dark:text-white focus:ring-2 focus:ring-cyan-500 focus:outline-none" />
                 </div>
               </div>
 
               {/* Row 3: Time Slot + Region */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                 <div>
-                  <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Time Slot *</label>
-                  <select required name="timeSlot" value={formData.timeSlot} onChange={handleChange} className="w-full bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-md px-4 py-2.5 text-slate-900 dark:text-white focus:ring-2 focus:ring-cyan-500 focus:outline-none">
+                  <label htmlFor="timeSlot" className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Time Slot *</label>
+                  <select required id="timeSlot" name="timeSlot" value={formData.timeSlot} onChange={handleChange} className="w-full bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-md px-4 py-2.5 text-slate-900 dark:text-white focus:ring-2 focus:ring-cyan-500 focus:outline-none">
                     <option value="">-- Select Time --</option>
                     {TIME_SLOTS.map(t => <option key={t.value} value={t.value}>{t.label}</option>)}
                   </select>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Area / Region *</label>
-                  <select required name="region" value={formData.region} onChange={handleChange} className="w-full bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-md px-4 py-2.5 text-slate-900 dark:text-white focus:ring-2 focus:ring-cyan-500 focus:outline-none">
+                  <label htmlFor="region" className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Area / Region *</label>
+                  <select required id="region" name="region" value={formData.region} onChange={handleChange} className="w-full bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-md px-4 py-2.5 text-slate-900 dark:text-white focus:ring-2 focus:ring-cyan-500 focus:outline-none">
                     <option value="">-- Select Area --</option>
                     {REGIONS.map(r => <option key={r.value} value={r.value}>{r.label}</option>)}
                   </select>
@@ -380,50 +500,51 @@ export default function HomePage() {
               {/* Row 4: Property Type + Address */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                 <div>
-                  <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Property Type *</label>
-                  <select required name="propertyType" value={formData.propertyType} onChange={handleChange} className="w-full bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-md px-4 py-2.5 text-slate-900 dark:text-white focus:ring-2 focus:ring-cyan-500 focus:outline-none">
+                  <label htmlFor="propertyType" className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Property Type *</label>
+                  <select required id="propertyType" name="propertyType" value={formData.propertyType} onChange={handleChange} className="w-full bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-md px-4 py-2.5 text-slate-900 dark:text-white focus:ring-2 focus:ring-cyan-500 focus:outline-none">
                     <option value="">-- Select Type --</option>
                     {PROPERTY_TYPES.map(p => <option key={p.value} value={p.value}>{p.label}</option>)}
                   </select>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Full Address *</label>
-                  <input type="text" required name="fullAddress" value={formData.fullAddress} onChange={handleChange} placeholder="Street, House/Office No, Landmark" className="w-full bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-md px-4 py-2.5 text-slate-900 dark:text-white focus:ring-2 focus:ring-cyan-500 focus:outline-none" />
+                  <label htmlFor="fullAddress" className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Full Address *</label>
+                  <input type="text" required id="fullAddress" name="fullAddress" value={formData.fullAddress} onChange={handleChange} placeholder="Street, House/Office No, Landmark" className="w-full bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-md px-4 py-2.5 text-slate-900 dark:text-white focus:ring-2 focus:ring-cyan-500 focus:outline-none" />
                 </div>
               </div>
 
               {/* Row 5: Name + Phone + Email */}
               <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
                 <div>
-                  <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Full Name *</label>
-                  <input type="text" required name="customerName" value={formData.customerName} onChange={handleChange} className="w-full bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-md px-4 py-2.5 text-slate-900 dark:text-white focus:ring-2 focus:ring-cyan-500 focus:outline-none" />
+                  <label htmlFor="customerName" className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Full Name *</label>
+                  <input type="text" required id="customerName" name="customerName" value={formData.customerName} onChange={handleChange} className="w-full bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-md px-4 py-2.5 text-slate-900 dark:text-white focus:ring-2 focus:ring-cyan-500 focus:outline-none" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Phone *</label>
-                  <input type="tel" required name="customerPhone" value={formData.customerPhone} onChange={handleChange} placeholder="03XXXXXXXXX" className="w-full bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-md px-4 py-2.5 text-slate-900 dark:text-white focus:ring-2 focus:ring-cyan-500 focus:outline-none" />
+                  <label htmlFor="customerPhone" className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Phone *</label>
+                  <input type="tel" required id="customerPhone" name="customerPhone" value={formData.customerPhone} onChange={handleChange} placeholder="03XXXXXXXXX" className="w-full bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-md px-4 py-2.5 text-slate-900 dark:text-white focus:ring-2 focus:ring-cyan-500 focus:outline-none" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Email (Optional)</label>
-                  <input type="email" name="customerEmail" value={formData.customerEmail} onChange={handleChange} className="w-full bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-md px-4 py-2.5 text-slate-900 dark:text-white focus:ring-2 focus:ring-cyan-500 focus:outline-none" />
+                  <label htmlFor="customerEmail" className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Email (Optional)</label>
+                  <input type="email" id="customerEmail" name="customerEmail" value={formData.customerEmail} onChange={handleChange} className="w-full bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-md px-4 py-2.5 text-slate-900 dark:text-white focus:ring-2 focus:ring-cyan-500 focus:outline-none" />
                 </div>
               </div>
 
               {/* Problem Description */}
               <div>
-                <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Problem Description (Optional)</label>
-                <textarea name="problemDescription" value={formData.problemDescription} onChange={handleChange} rows={3} placeholder="Briefly describe the issue..." className="w-full bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-md px-4 py-2.5 text-slate-900 dark:text-white focus:ring-2 focus:ring-cyan-500 focus:outline-none" />
+                <label htmlFor="problemDescription" className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Problem Description (Optional)</label>
+                <textarea id="problemDescription" name="problemDescription" value={formData.problemDescription} onChange={handleChange} rows={3} placeholder="Briefly describe the issue..." className="w-full bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-md px-4 py-2.5 text-slate-900 dark:text-white focus:ring-2 focus:ring-cyan-500 focus:outline-none" />
               </div>
 
               {/* Submit */}
               <button
                 type="submit"
                 disabled={submitting}
+                aria-label={submitting ? 'Submitting your booking' : 'Confirm your booking'}
                 className="w-full py-4 bg-gradient-to-r from-cyan-500 to-teal-500 hover:from-cyan-400 hover:to-teal-400 text-slate-900 font-bold text-lg rounded-md shadow-glow-cyan transition-all disabled:opacity-50 flex items-center justify-center gap-3"
               >
                 {submitting ? (
-                  <><LucideIcons.Loader2 className="w-5 h-5 animate-spin" /> Submitting...</>
+                  <><Loader2 className="w-5 h-5 animate-spin" aria-hidden="true" /> Submitting...</>
                 ) : (
-                  <><LucideIcons.CalendarCheck className="w-5 h-5" /> Confirm Booking</>
+                  <><CalendarCheck className="w-5 h-5" aria-hidden="true" /> Confirm Booking</>
                 )}
               </button>
 
@@ -445,12 +566,12 @@ export default function HomePage() {
           <h2 className="text-3xl md:text-5xl font-bold text-white mb-6">Ready to Schedule an Inspection?</h2>
           <p className="text-xl text-slate-300 mb-10">Experience the difference of an engineering-led service team.</p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
-            <button onClick={scrollToBooking} className="w-full sm:w-auto px-8 py-4 rounded-md bg-cyan-500 hover:bg-cyan-400 text-brand-navy font-bold text-lg shadow-glow-cyan transition-all">
+            <button onClick={scrollToBooking} aria-label="Book an online service now" className="w-full sm:w-auto px-8 py-4 rounded-md bg-cyan-500 hover:bg-cyan-400 text-brand-navy font-bold text-lg shadow-glow-cyan transition-all">
               Book Online Now
             </button>
             <span className="text-slate-400 font-medium">or</span>
-            <a href={`tel:${COMPANY.phone.replace(/-/g, '')}`} className="w-full sm:w-auto px-8 py-4 rounded-md bg-slate-800 hover:bg-slate-700 text-white font-bold text-lg transition-colors border border-slate-700 flex items-center justify-center gap-2">
-              <LucideIcons.PhoneCall className="w-5 h-5" /> {COMPANY.phone}
+            <a href={`tel:${COMPANY.phone.replace(/-/g, '')}`} aria-label={`Call us at ${COMPANY.phone}`} className="w-full sm:w-auto px-8 py-4 rounded-md bg-slate-800 hover:bg-slate-700 text-white font-bold text-lg transition-colors border border-slate-700 flex items-center justify-center gap-2">
+              <PhoneCall className="w-5 h-5" aria-hidden="true" /> {COMPANY.phone}
             </a>
           </div>
         </div>
