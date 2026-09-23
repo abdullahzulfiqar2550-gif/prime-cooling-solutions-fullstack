@@ -6,13 +6,16 @@ import { EmergencyBanner } from '@/components/layout/EmergencyBanner';
 import { Header } from '@/components/layout/Header';
 import { Footer } from '@/components/layout/Footer';
 import { WhatsAppButton } from '@/components/layout/WhatsAppButton';
-import { COMPANY } from '@/lib/constants';
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
 
 export const metadata: Metadata = {
-  title: `${COMPANY.name} | Professional HVAC & Appliance Services`,
-  description: `Professional AC service for business premises in Lahore. ${COMPANY.tagline}`,
+  title: 'Prime Cooling Solutions | Professional HVAC & Appliance Services — Lahore',
+  description: 'Engineering-led air conditioning installation, maintenance, repair & AMC services for offices, schools, shops & commercial premises in Lahore. Call 0337-1768618.',
+  icons: {
+    icon: '/logo.png',
+    apple: '/logo.png',
+  },
 };
 
 export default function RootLayout({

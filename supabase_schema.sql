@@ -183,12 +183,18 @@ CREATE POLICY "Service role can read contacts" ON contacts
 CREATE POLICY "Service role can update contacts" ON contacts
   FOR UPDATE USING (true) WITH CHECK (true);
 
--- SERVICES: Anyone can read active services
-CREATE POLICY "Anyone can read active services" ON services
-  FOR SELECT USING (status = 'Active');
+-- SERVICES: Anyone can read, admin can manage (via anon key with RLS pass-through)
+CREATE POLICY "Anyone can read services" ON services
+  FOR SELECT USING (true);
 
-CREATE POLICY "Service role manage services" ON services
-  FOR ALL USING (true) WITH CHECK (true);
+CREATE POLICY "Anyone can insert services" ON services
+  FOR INSERT WITH CHECK (true);
+
+CREATE POLICY "Anyone can update services" ON services
+  FOR UPDATE USING (true) WITH CHECK (true);
+
+CREATE POLICY "Anyone can delete services" ON services
+  FOR DELETE USING (true);
 
 -- USERS: Only service_role
 CREATE POLICY "Service role manages users" ON users

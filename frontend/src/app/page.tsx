@@ -1,9 +1,10 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import Link from 'next/link';
 import * as LucideIcons from 'lucide-react';
-import { COMPANY, SERVICES, WHY_CHOOSE_US, SERVICE_METHODOLOGY, CLIENT_SEGMENTS, AMC_DETAILS } from '@/lib/constants';
+import { COMPANY, SERVICES, WHY_CHOOSE_US, SERVICE_METHODOLOGY, CLIENT_SEGMENTS, AMC_DETAILS, AC_TYPES, TIME_SLOTS, REGIONS, PROPERTY_TYPES } from '@/lib/constants';
+import { supabase, generateBookingId } from '@/lib/supabase';
 
 function DynamicIcon({ name, className }: { name: string, className?: string }) {
   const icons = LucideIcons as unknown as Record<string, React.ComponentType<{ className?: string }>>;
@@ -14,14 +15,74 @@ function DynamicIcon({ name, className }: { name: string, className?: string }) 
 export default function HomePage() {
   const primaryServices = SERVICES.slice(0, 6);
 
+  // ── Booking form state ──────────────────────────────────────
+  const [submitting, setSubmitting] = useState(false);
+  const [bookingSuccess, setBookingSuccess] = useState('');
+  const [formData, setFormData] = useState({
+    serviceId: '',
+    acType: '',
+    units: 1,
+    problemDescription: '',
+    scheduledDate: '',
+    timeSlot: '',
+    region: '',
+    propertyType: '',
+    fullAddress: '',
+    customerName: '',
+    customerPhone: '',
+    customerEmail: '',
+  });
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleBookingSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setSubmitting(true);
+    try {
+      const id = await generateBookingId();
+      const serviceTitle = SERVICES.find(s => s.id === formData.serviceId)?.title || formData.serviceId;
+      const { error } = await supabase.from('bookings').insert({
+        id,
+        service_package: serviceTitle,
+        appliance: formData.acType,
+        unit_count: Number(formData.units),
+        symptoms_notes: formData.problemDescription,
+        scheduled_date: formData.scheduledDate,
+        time_slot: formData.timeSlot,
+        region: formData.region,
+        property_type: formData.propertyType,
+        address: formData.fullAddress,
+        customer_name: formData.customerName,
+        phone: formData.customerPhone,
+        email: formData.customerEmail,
+      });
+      if (error) throw error;
+      setBookingSuccess(id);
+      setFormData({ serviceId: '', acType: '', units: 1, problemDescription: '', scheduledDate: '', timeSlot: '', region: '', propertyType: '', fullAddress: '', customerName: '', customerPhone: '', customerEmail: '' });
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : 'Unknown error';
+      alert(`Error creating booking: ${message}`);
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  const scrollToBooking = () => {
+    document.getElementById('book-now')?.scrollIntoView({ behavior: 'smooth' });
+  };
+
   return (
     <div className="flex flex-col min-h-screen">
-      {/* Section 1: Hero */}
+      {/* ═══════════════════════════════════════════════════════════
+          Section 1: HERO — Clean, no form, Book Now scrolls down
+         ═══════════════════════════════════════════════════════════ */}
       <section className="relative bg-slate-900 text-white overflow-hidden py-20 lg:py-32">
         <div className="absolute inset-0 z-0 opacity-20">
           <div className="absolute inset-0 bg-gradient-to-r from-brand-navy to-brand-cyan/20" />
         </div>
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 flex flex-col lg:flex-row items-center gap-12">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center lg:text-left flex flex-col lg:flex-row items-center gap-12">
           <div className="lg:w-3/5">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-800/80 border border-slate-700 text-xs font-medium text-cyan-400 mb-6">
               <LucideIcons.Shield className="w-4 h-4" />
@@ -36,60 +97,63 @@ export default function HomePage() {
             <p className="text-lg md:text-xl text-slate-300 mb-8 max-w-2xl leading-relaxed">
               Professional AC service for business premises and homes in Lahore. We deliver documented, preventive care to keep your environment perfectly cooled.
             </p>
-            <div className="flex flex-wrap gap-4 mb-10">
-              <Link href="/book" className="px-6 py-3 rounded-md bg-gradient-to-r from-cyan-500 to-teal-500 hover:from-cyan-400 hover:to-teal-400 text-slate-900 font-semibold shadow-glow-cyan transition-all text-center">
-                Book Online
-              </Link>
-              <a href={`tel:${COMPANY.phone.replace(/-/g, '')}`} className="px-6 py-3 rounded-md bg-transparent border-2 border-slate-700 hover:border-cyan-500 text-white font-semibold transition-all text-center flex items-center gap-2">
+            <div className="flex flex-wrap gap-4 mb-10 justify-center lg:justify-start">
+              <button
+                onClick={scrollToBooking}
+                className="px-8 py-4 rounded-md bg-gradient-to-r from-cyan-500 to-teal-500 hover:from-cyan-400 hover:to-teal-400 text-slate-900 font-bold text-lg shadow-glow-cyan transition-all flex items-center gap-3"
+              >
+                <LucideIcons.CalendarCheck className="w-6 h-6" />
+                Book Now
+              </button>
+              <a href={`tel:${COMPANY.phone.replace(/-/g, '')}`} className="px-6 py-4 rounded-md bg-transparent border-2 border-slate-700 hover:border-cyan-500 text-white font-semibold transition-all text-center flex items-center gap-2">
                 <LucideIcons.Phone className="w-5 h-5" />
                 Call / WhatsApp
               </a>
             </div>
-            <div className="flex flex-wrap gap-6 text-sm font-medium text-slate-400">
+            <div className="flex flex-wrap gap-6 text-sm font-medium text-slate-400 justify-center lg:justify-start">
               <span className="flex items-center gap-2"><LucideIcons.CheckCircle2 className="text-teal-400 w-5 h-5" /> 4+ Years Experience</span>
               <span className="flex items-center gap-2"><LucideIcons.CheckCircle2 className="text-teal-400 w-5 h-5" /> Engineering-Led</span>
               <span className="flex items-center gap-2"><LucideIcons.CheckCircle2 className="text-teal-400 w-5 h-5" /> Documented Service</span>
             </div>
           </div>
 
-          <div className="lg:w-2/5 w-full">
-            <div className="bg-slate-800/50 backdrop-blur-md border border-slate-700 rounded-xl p-6 shadow-2xl">
-              <h3 className="text-xl font-semibold mb-4 text-white">Quick Service Request</h3>
-              <form className="space-y-4" action="/book">
-                <div>
-                  <label className="block text-sm font-medium text-slate-300 mb-1">AC Type</label>
-                  <select className="w-full bg-slate-900 border border-slate-700 rounded-md px-3 py-2 text-white focus:ring-2 focus:ring-cyan-500 focus:outline-none">
-                    <option>Wall Mounted Split AC</option>
-                    <option>Floor Standing Cabinet</option>
-                    <option>Cassette AC</option>
-                  </select>
+          {/* Hero right side — Stats card instead of form */}
+          <div className="lg:w-2/5 w-full max-w-md">
+            <div className="bg-slate-800/50 backdrop-blur-md border border-slate-700 rounded-xl p-8 shadow-2xl text-center">
+              <div className="w-16 h-16 rounded-full bg-gradient-to-r from-cyan-500 to-teal-500 flex items-center justify-center mx-auto mb-6">
+                <LucideIcons.Snowflake className="w-8 h-8 text-white" />
+              </div>
+              <h3 className="text-2xl font-bold text-white mb-2">Need AC Service?</h3>
+              <p className="text-slate-400 mb-6">Schedule a professional inspection in under 2 minutes</p>
+              <div className="grid grid-cols-3 gap-4 mb-6">
+                <div className="bg-slate-900/60 rounded-lg p-3">
+                  <div className="text-2xl font-bold text-cyan-400">13</div>
+                  <div className="text-[10px] text-slate-400 uppercase font-medium">Services</div>
                 </div>
-                <div>
-                  <label className="block text-sm font-medium text-slate-300 mb-1">Service Required</label>
-                  <select className="w-full bg-slate-900 border border-slate-700 rounded-md px-3 py-2 text-white focus:ring-2 focus:ring-cyan-500 focus:outline-none">
-                    {primaryServices.map(s => <option key={s.id}>{s.title}</option>)}
-                  </select>
+                <div className="bg-slate-900/60 rounded-lg p-3">
+                  <div className="text-2xl font-bold text-teal-400">4+</div>
+                  <div className="text-[10px] text-slate-400 uppercase font-medium">Years Exp</div>
                 </div>
-                <div>
-                  <label className="block text-sm font-medium text-slate-300 mb-1">Area</label>
-                  <select className="w-full bg-slate-900 border border-slate-700 rounded-md px-3 py-2 text-white focus:ring-2 focus:ring-cyan-500 focus:outline-none">
-                    <option>Kot Lakhpat</option>
-                    <option>Model Town</option>
-                    <option>Johar Town</option>
-                    <option>DHA</option>
-                    <option>Gulberg</option>
-                  </select>
+                <div className="bg-slate-900/60 rounded-lg p-3">
+                  <div className="text-2xl font-bold text-amber-400">10</div>
+                  <div className="text-[10px] text-slate-400 uppercase font-medium">AMC Visits</div>
                 </div>
-                <button type="submit" className="w-full mt-2 bg-cyan-500 hover:bg-cyan-400 text-slate-900 font-bold py-3 rounded-md transition-colors">
-                  Proceed to Booking
-                </button>
-              </form>
+              </div>
+              <button
+                onClick={scrollToBooking}
+                className="w-full bg-cyan-500 hover:bg-cyan-400 text-slate-900 font-bold py-3 rounded-md transition-colors flex items-center justify-center gap-2"
+              >
+                <LucideIcons.ArrowDown className="w-5 h-5" />
+                Book Service Below
+              </button>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Section 2: Services Overview */}
+      {/* ═══════════════════════════════════════════════════════════
+          Section 2: SERVICES OVERVIEW
+         ═══════════════════════════════════════════════════════════ */}
       <section className="py-20 bg-slate-50 dark:bg-slate-950">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
@@ -106,9 +170,9 @@ export default function HomePage() {
                 <p className="text-slate-600 dark:text-slate-400 mb-6 flex-grow">{service.description}</p>
                 <div className="flex items-center justify-between mt-auto pt-4 border-t border-slate-100 dark:border-slate-800">
                   <span className="font-semibold text-teal-600 dark:text-teal-400">{service.priceText}</span>
-                  <Link href={`/book?service=${service.id}`} className="text-sm font-medium text-cyan-600 dark:text-cyan-400 hover:underline inline-flex items-center gap-1">
+                  <button onClick={scrollToBooking} className="text-sm font-medium text-cyan-600 dark:text-cyan-400 hover:underline inline-flex items-center gap-1">
                     Book Now <LucideIcons.ArrowRight className="w-4 h-4" />
-                  </Link>
+                  </button>
                 </div>
               </div>
             ))}
@@ -121,7 +185,9 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Section 3: Why Choose Us */}
+      {/* ═══════════════════════════════════════════════════════════
+          Section 3: WHY CHOOSE US
+         ═══════════════════════════════════════════════════════════ */}
       <section className="py-20 bg-white dark:bg-slate-900 border-y border-slate-200 dark:border-slate-800">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
@@ -146,7 +212,9 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Section 4: AMC Highlight */}
+      {/* ═══════════════════════════════════════════════════════════
+          Section 4: AMC HIGHLIGHT
+         ═══════════════════════════════════════════════════════════ */}
       <section className="py-20 bg-slate-50 dark:bg-slate-950">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="bg-gradient-to-br from-brand-navy to-slate-800 rounded-2xl overflow-hidden shadow-xl border border-slate-700">
@@ -181,7 +249,9 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Section 5: Service Methodology */}
+      {/* ═══════════════════════════════════════════════════════════
+          Section 5: SERVICE METHODOLOGY
+         ═══════════════════════════════════════════════════════════ */}
       <section className="py-20 bg-white dark:bg-slate-900 border-y border-slate-200 dark:border-slate-800 overflow-hidden">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
@@ -205,7 +275,9 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Section 6: Client Segments */}
+      {/* ═══════════════════════════════════════════════════════════
+          Section 6: CLIENT SEGMENTS (Industries We Serve)
+         ═══════════════════════════════════════════════════════════ */}
       <section className="py-20 bg-slate-50 dark:bg-slate-950">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
@@ -222,7 +294,150 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Section 7: CTA Banner */}
+      {/* ═══════════════════════════════════════════════════════════
+          Section 7: BOOKING FORM — Full inline booking
+          (Placed AFTER Services/Projects/Clients so customer trusts first)
+         ═══════════════════════════════════════════════════════════ */}
+      <section id="book-now" className="py-20 bg-white dark:bg-slate-900 border-y border-slate-200 dark:border-slate-800">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-cyan-100 dark:bg-cyan-900/30 text-cyan-700 dark:text-cyan-400 text-sm font-medium mb-4">
+              <LucideIcons.CalendarCheck className="w-4 h-4" /> Online Booking
+            </div>
+            <h2 className="text-3xl md:text-4xl font-bold text-slate-900 dark:text-white mb-4">Book Your Service</h2>
+            <p className="text-lg text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">
+              Fill the form below to schedule professional HVAC service. We&apos;ll confirm your booking within 30 minutes.
+            </p>
+          </div>
+
+          {bookingSuccess ? (
+            <div className="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-xl p-8 text-center">
+              <div className="w-16 h-16 rounded-full bg-green-100 dark:bg-green-900/40 flex items-center justify-center mx-auto mb-4">
+                <LucideIcons.CheckCircle2 className="w-8 h-8 text-green-600 dark:text-green-400" />
+              </div>
+              <h3 className="text-2xl font-bold text-green-800 dark:text-green-300 mb-2">Booking Confirmed!</h3>
+              <p className="text-green-700 dark:text-green-400 mb-4">Your Reference ID: <span className="font-mono font-bold text-lg">{bookingSuccess}</span></p>
+              <p className="text-slate-600 dark:text-slate-400 mb-6">We&apos;ll contact you shortly on WhatsApp to confirm details.</p>
+              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                <Link href={`/track`} className="px-6 py-3 bg-green-600 hover:bg-green-500 text-white font-bold rounded-md transition-colors inline-flex items-center gap-2">
+                  <LucideIcons.Search className="w-4 h-4" /> Track Booking
+                </Link>
+                <button onClick={() => setBookingSuccess('')} className="px-6 py-3 border border-slate-300 dark:border-slate-700 text-slate-700 dark:text-slate-300 font-medium rounded-md hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors">
+                  Book Another Service
+                </button>
+              </div>
+            </div>
+          ) : (
+            <form onSubmit={handleBookingSubmit} className="bg-slate-50 dark:bg-slate-800/50 rounded-xl border border-slate-200 dark:border-slate-700 p-6 md:p-8 space-y-6">
+              {/* Row 1: Service + AC Type */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                <div>
+                  <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Service Required *</label>
+                  <select required name="serviceId" value={formData.serviceId} onChange={handleChange} className="w-full bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-md px-4 py-2.5 text-slate-900 dark:text-white focus:ring-2 focus:ring-cyan-500 focus:outline-none">
+                    <option value="">-- Select a Service --</option>
+                    {SERVICES.map(s => <option key={s.id} value={s.id}>{s.title} — {s.priceText}</option>)}
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">AC Type *</label>
+                  <select required name="acType" value={formData.acType} onChange={handleChange} className="w-full bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-md px-4 py-2.5 text-slate-900 dark:text-white focus:ring-2 focus:ring-cyan-500 focus:outline-none">
+                    <option value="">-- Select Type --</option>
+                    {AC_TYPES.map(t => <option key={t.value} value={t.value}>{t.label}</option>)}
+                  </select>
+                </div>
+              </div>
+
+              {/* Row 2: Units + Date */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                <div>
+                  <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Number of Units *</label>
+                  <input type="number" required min="1" max="20" name="units" value={formData.units} onChange={handleChange} className="w-full bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-md px-4 py-2.5 text-slate-900 dark:text-white focus:ring-2 focus:ring-cyan-500 focus:outline-none" />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Preferred Date *</label>
+                  <input type="date" required name="scheduledDate" value={formData.scheduledDate} onChange={handleChange} className="w-full bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-md px-4 py-2.5 text-slate-900 dark:text-white focus:ring-2 focus:ring-cyan-500 focus:outline-none" />
+                </div>
+              </div>
+
+              {/* Row 3: Time Slot + Region */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                <div>
+                  <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Time Slot *</label>
+                  <select required name="timeSlot" value={formData.timeSlot} onChange={handleChange} className="w-full bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-md px-4 py-2.5 text-slate-900 dark:text-white focus:ring-2 focus:ring-cyan-500 focus:outline-none">
+                    <option value="">-- Select Time --</option>
+                    {TIME_SLOTS.map(t => <option key={t.value} value={t.value}>{t.label}</option>)}
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Area / Region *</label>
+                  <select required name="region" value={formData.region} onChange={handleChange} className="w-full bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-md px-4 py-2.5 text-slate-900 dark:text-white focus:ring-2 focus:ring-cyan-500 focus:outline-none">
+                    <option value="">-- Select Area --</option>
+                    {REGIONS.map(r => <option key={r.value} value={r.value}>{r.label}</option>)}
+                  </select>
+                </div>
+              </div>
+
+              {/* Row 4: Property Type + Address */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                <div>
+                  <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Property Type *</label>
+                  <select required name="propertyType" value={formData.propertyType} onChange={handleChange} className="w-full bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-md px-4 py-2.5 text-slate-900 dark:text-white focus:ring-2 focus:ring-cyan-500 focus:outline-none">
+                    <option value="">-- Select Type --</option>
+                    {PROPERTY_TYPES.map(p => <option key={p.value} value={p.value}>{p.label}</option>)}
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Full Address *</label>
+                  <input type="text" required name="fullAddress" value={formData.fullAddress} onChange={handleChange} placeholder="Street, House/Office No, Landmark" className="w-full bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-md px-4 py-2.5 text-slate-900 dark:text-white focus:ring-2 focus:ring-cyan-500 focus:outline-none" />
+                </div>
+              </div>
+
+              {/* Row 5: Name + Phone + Email */}
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+                <div>
+                  <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Full Name *</label>
+                  <input type="text" required name="customerName" value={formData.customerName} onChange={handleChange} className="w-full bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-md px-4 py-2.5 text-slate-900 dark:text-white focus:ring-2 focus:ring-cyan-500 focus:outline-none" />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Phone *</label>
+                  <input type="tel" required name="customerPhone" value={formData.customerPhone} onChange={handleChange} placeholder="03XXXXXXXXX" className="w-full bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-md px-4 py-2.5 text-slate-900 dark:text-white focus:ring-2 focus:ring-cyan-500 focus:outline-none" />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Email (Optional)</label>
+                  <input type="email" name="customerEmail" value={formData.customerEmail} onChange={handleChange} className="w-full bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-md px-4 py-2.5 text-slate-900 dark:text-white focus:ring-2 focus:ring-cyan-500 focus:outline-none" />
+                </div>
+              </div>
+
+              {/* Problem Description */}
+              <div>
+                <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Problem Description (Optional)</label>
+                <textarea name="problemDescription" value={formData.problemDescription} onChange={handleChange} rows={3} placeholder="Briefly describe the issue..." className="w-full bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-md px-4 py-2.5 text-slate-900 dark:text-white focus:ring-2 focus:ring-cyan-500 focus:outline-none" />
+              </div>
+
+              {/* Submit */}
+              <button
+                type="submit"
+                disabled={submitting}
+                className="w-full py-4 bg-gradient-to-r from-cyan-500 to-teal-500 hover:from-cyan-400 hover:to-teal-400 text-slate-900 font-bold text-lg rounded-md shadow-glow-cyan transition-all disabled:opacity-50 flex items-center justify-center gap-3"
+              >
+                {submitting ? (
+                  <><LucideIcons.Loader2 className="w-5 h-5 animate-spin" /> Submitting...</>
+                ) : (
+                  <><LucideIcons.CalendarCheck className="w-5 h-5" /> Confirm Booking</>
+                )}
+              </button>
+
+              <p className="text-center text-xs text-slate-500 dark:text-slate-500">
+                By booking, you agree to be contacted via WhatsApp/Phone. Working hours: Mon–Sat 9AM–7PM.
+              </p>
+            </form>
+          )}
+        </div>
+      </section>
+
+      {/* ═══════════════════════════════════════════════════════════
+          Section 8: CTA BANNER
+         ═══════════════════════════════════════════════════════════ */}
       <section className="py-24 bg-brand-navy relative overflow-hidden">
         <div className="absolute inset-0 opacity-10 bg-[url('https://images.unsplash.com/photo-1581094794329-c8112a89af12?auto=format&fit=crop&q=80&w=2000')] bg-cover bg-center" />
         <div className="absolute inset-0 bg-gradient-to-b from-transparent to-brand-navy" />
@@ -230,9 +445,9 @@ export default function HomePage() {
           <h2 className="text-3xl md:text-5xl font-bold text-white mb-6">Ready to Schedule an Inspection?</h2>
           <p className="text-xl text-slate-300 mb-10">Experience the difference of an engineering-led service team.</p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
-            <Link href="/book" className="w-full sm:w-auto px-8 py-4 rounded-md bg-cyan-500 hover:bg-cyan-400 text-brand-navy font-bold text-lg shadow-glow-cyan transition-all">
+            <button onClick={scrollToBooking} className="w-full sm:w-auto px-8 py-4 rounded-md bg-cyan-500 hover:bg-cyan-400 text-brand-navy font-bold text-lg shadow-glow-cyan transition-all">
               Book Online Now
-            </Link>
+            </button>
             <span className="text-slate-400 font-medium">or</span>
             <a href={`tel:${COMPANY.phone.replace(/-/g, '')}`} className="w-full sm:w-auto px-8 py-4 rounded-md bg-slate-800 hover:bg-slate-700 text-white font-bold text-lg transition-colors border border-slate-700 flex items-center justify-center gap-2">
               <LucideIcons.PhoneCall className="w-5 h-5" /> {COMPANY.phone}
