@@ -15,9 +15,12 @@ export function Header() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           <div className="flex-shrink-0 flex items-center">
-            <Link href="/" className="flex items-center gap-2">
-              <Image src="/logo.png" alt="Prime Cooling Solutions" width={40} height={40} className="rounded-md" priority />
-              <span className="font-bold text-xl text-slate-900 dark:text-white tracking-tight">PRIME COOLING</span>
+            <Link href="/" className="flex items-center gap-3">
+              <Image src="/logo.png" alt="Prime Cooling Solutions" width={44} height={44} className="rounded-md" priority />
+              <div className="leading-tight">
+                <span className="font-bold text-lg text-slate-900 dark:text-white tracking-tight block">PRIME COOLING</span>
+                <span className="font-semibold text-[11px] text-cyan-600 dark:text-cyan-400 tracking-widest block">SOLUTIONS</span>
+              </div>
             </Link>
           </div>
 

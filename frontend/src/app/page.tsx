@@ -147,125 +147,241 @@ export default function HomePage() {
 
   return (
     <div className="flex flex-col min-h-screen">
-      {/* ═══════════════════════════════════════════════════════════
-          Section 1: HERO — Modern industrial look with HVAC background
-         ═══════════════════════════════════════════════════════════ */}
-      <section className="relative text-white overflow-hidden py-20 lg:py-32">
-        {/* Background image + dark overlay */}
+      {/* ═══════════════════════════════════════════════════════════════
+          HERO — Premium 3D HVAC visual with floating glass cards
+         ═══════════════════════════════════════════════════════════════ */}
+      <section className="relative text-white overflow-hidden min-h-[600px] lg:min-h-[680px]">
+        {/* Layer 1: Background image */}
         <div className="absolute inset-0 z-0">
           <Image
-            src="https://images.unsplash.com/photo-1621905251189-08b45d6a269e?auto=format&fit=crop&q=80&w=2000"
-            alt="Professional HVAC engineer servicing an air conditioning unit"
+            src="/hero-bg.jpg"
+            alt="Prime Cooling Solutions HVAC engineering team at a modern commercial building"
             fill
-            className="object-cover"
+            className="object-cover object-center"
             priority
+            quality={85}
           />
-          <div className="absolute inset-0 bg-slate-900/80" />
-          <div className="absolute inset-0 bg-gradient-to-r from-brand-navy/60 to-brand-cyan/10" />
+          {/* Left-to-right gradient overlay — dark left for text contrast, visible right */}
+          <div
+            className="absolute inset-0"
+            style={{
+              background: 'linear-gradient(90deg, rgba(3,20,40,0.94) 0%, rgba(3,25,48,0.85) 30%, rgba(3,25,48,0.50) 60%, rgba(3,25,48,0.20) 100%)',
+            }}
+          />
+          {/* Subtle cyan atmospheric glow on right */}
+          <div className="absolute top-1/4 right-1/4 w-96 h-96 bg-cyan-500/5 rounded-full blur-[100px] pointer-events-none" />
         </div>
 
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center lg:text-left flex flex-col lg:flex-row items-center gap-12">
-          <div className="lg:w-3/5">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-800/80 border border-slate-700 text-xs font-medium text-cyan-400 mb-6">
-              <Shield className="w-4 h-4" aria-hidden="true" />
-              Engineering-Led HVAC Service • Kot Lakhpat, Lahore
+        {/* Floating snowflake particles */}
+        <div className="absolute inset-0 z-[1] pointer-events-none">
+          <Snowflake className="absolute top-[12%] left-[8%] w-4 h-4 text-cyan-400/15 animate-float" />
+          <Snowflake className="absolute top-[22%] right-[18%] w-3 h-3 text-cyan-300/10 animate-float-slow" />
+          <Snowflake className="absolute bottom-[25%] left-[22%] w-5 h-5 text-teal-400/8 animate-float-reverse" />
+          <Snowflake className="absolute top-[45%] right-[38%] w-3 h-3 text-cyan-400/10 animate-float" style={{ animationDelay: '1s' }} />
+        </div>
+
+        {/* Main content */}
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 flex flex-col lg:flex-row items-center gap-8 lg:gap-4 py-16 lg:py-20">
+
+          {/* ── LEFT: Hero Content ── */}
+          <div className="lg:w-[52%] w-full text-center lg:text-left">
+            {/* Badge */}
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-[rgba(80,210,255,0.45)] text-[13px] font-medium tracking-wide mb-8"
+              style={{ background: 'rgba(5,30,55,0.55)', backdropFilter: 'blur(12px)' }}>
+              <Shield className="w-4 h-4 text-[#08D9E8]" aria-hidden="true" />
+              <span className="text-[#08D9E8]">ENGINEERING-LED HVAC SERVICE • LAHORE</span>
             </div>
 
-            {/* PCS Logo */}
-            <div className="mb-6 flex justify-center lg:justify-start">
-              <Image
-                src="/logo.png"
-                alt="Prime Cooling Solutions logo"
-                width={80}
-                height={80}
-                className="rounded-xl"
-              />
-            </div>
-
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight mb-6 leading-tight">
-              Professional HVAC Solutions<br />
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-teal-400">
-                Built for Reliability.
-              </span>
+            {/* Heading */}
+            <h1 className="text-[42px] md:text-[56px] lg:text-[66px] font-extrabold leading-[1.0] tracking-tight mb-6">
+              Professional AC<br />
+              Service<br />
+              <span className="text-[#08D9E8]">&amp; HVAC Solutions</span>
             </h1>
-            <p className="text-lg md:text-xl text-slate-300 mb-8 max-w-2xl leading-relaxed">
-              Engineering-led air conditioning installation, maintenance &amp; repair services for commercial &amp; residential premises across Lahore.
+
+            {/* Description */}
+            <p className="text-[17px] md:text-[18px] text-[#D7E5F2] mb-8 max-w-[540px] leading-relaxed mx-auto lg:mx-0">
+              Reliable installation, repair &amp; maintenance for homes and businesses across Lahore.
             </p>
 
-            {/* 3 CTAs */}
-            <div className="flex flex-wrap gap-4 mb-10 justify-center lg:justify-start">
+            {/* CTAs */}
+            <div className="flex flex-wrap gap-4 mb-8 justify-center lg:justify-start">
               <button
                 onClick={scrollToBooking}
-                aria-label="Book a service — scroll to booking form"
-                className="px-8 py-4 rounded-md bg-gradient-to-r from-cyan-500 to-teal-500 hover:from-cyan-400 hover:to-teal-400 text-slate-900 font-bold text-lg shadow-glow-cyan transition-all flex items-center gap-3"
+                aria-label="Book a service"
+                className="group px-8 py-4 rounded-xl font-bold text-[17px] text-[#061B32] flex items-center gap-2.5 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-cyan-500/30"
+                style={{ background: 'linear-gradient(135deg, #08D9E8, #00D4E6)' }}
               >
-                <CalendarCheck className="w-6 h-6" aria-hidden="true" />
+                <CalendarCheck className="w-5 h-5" aria-hidden="true" />
                 Book Service
               </button>
               <a
                 href={`tel:${COMPANY.phone.replace(/-/g, '')}`}
                 aria-label={`Call us at ${COMPANY.phone}`}
-                className="px-6 py-4 rounded-md bg-transparent border-2 border-slate-700 hover:border-cyan-500 text-white font-semibold transition-all text-center flex items-center gap-2"
+                className="group px-7 py-4 rounded-xl font-semibold text-[17px] text-white flex items-center gap-2.5 transition-all duration-200 hover:-translate-y-0.5 hover:border-[#08D9E8]"
+                style={{
+                  background: 'rgba(5,30,55,0.4)',
+                  backdropFilter: 'blur(10px)',
+                  border: '1px solid rgba(100,200,255,0.5)',
+                }}
               >
                 <Phone className="w-5 h-5" aria-hidden="true" />
                 Call Now
               </a>
-              <a
-                href={`https://wa.me/${COMPANY.whatsapp}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label="Chat with us on WhatsApp"
-                className="px-6 py-4 rounded-md bg-green-600 hover:bg-green-500 border-2 border-green-600 hover:border-green-500 text-white font-semibold transition-all text-center flex items-center gap-2"
-              >
-                <Phone className="w-5 h-5" aria-hidden="true" />
-                WhatsApp
-              </a>
             </div>
 
             {/* Trust indicators */}
-            <div className="flex flex-wrap gap-6 text-sm font-medium text-slate-400 justify-center lg:justify-start">
-              <span className="flex items-center gap-2"><CheckCircle2 className="text-teal-400 w-5 h-5" aria-hidden="true" /> 4+ Years Experience</span>
-              <span className="flex items-center gap-2"><CheckCircle2 className="text-teal-400 w-5 h-5" aria-hidden="true" /> Engineering-Led</span>
-              <span className="flex items-center gap-2"><CheckCircle2 className="text-teal-400 w-5 h-5" aria-hidden="true" /> Documented Service</span>
+            <div className="flex flex-wrap gap-6 text-[15px] font-medium text-[#D7E5F2]/80 justify-center lg:justify-start">
+              <span className="flex items-center gap-2">
+                <CheckCircle2 className="w-[18px] h-[18px] text-[#08D9E8]" aria-hidden="true" />
+                Professional
+              </span>
+              <span className="flex items-center gap-2">
+                <CheckCircle2 className="w-[18px] h-[18px] text-[#08D9E8]" aria-hidden="true" />
+                Fast Response
+              </span>
+              <span className="flex items-center gap-2">
+                <CheckCircle2 className="w-[18px] h-[18px] text-[#08D9E8]" aria-hidden="true" />
+                Reliable Service
+              </span>
             </div>
           </div>
 
-          {/* Hero right side — Stats card */}
-          <div className="lg:w-2/5 w-full max-w-md">
-            <div className="bg-slate-800/50 backdrop-blur-md border border-slate-700 rounded-xl p-8 shadow-2xl text-center">
-              <div className="w-16 h-16 rounded-full bg-gradient-to-r from-cyan-500 to-teal-500 flex items-center justify-center mx-auto mb-6">
-                <Snowflake className="w-8 h-8 text-white" aria-hidden="true" />
-              </div>
-              <h3 className="text-2xl font-bold text-white mb-2">Need AC Service?</h3>
-              <p className="text-slate-400 mb-6">Schedule a professional inspection in under 2 minutes</p>
+          {/* ── RIGHT: 3D AC Visual + Floating Cards ── */}
+          <div className="lg:w-[48%] w-full max-w-[520px] relative hidden md:block" style={{ perspective: '1200px' }}>
+            {/* Cyan atmospheric glow behind AC */}
+            <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+              <div className="w-72 h-72 bg-[#08D9E8]/8 rounded-full blur-[80px] animate-glow-pulse" />
+            </div>
 
-              {/* Trust stats bar */}
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">
-                <div className="bg-slate-900/60 rounded-lg p-3">
-                  <div className="text-2xl font-bold text-cyan-400">4+</div>
-                  <div className="text-[10px] text-slate-400 uppercase font-medium">Years</div>
+            {/* 3D AC Unit */}
+            <div className="relative mx-auto w-64 h-64 md:w-72 md:h-72 lg:w-80 lg:h-80 animate-float" style={{ animationDuration: '5s' }}>
+              {/* AC outer frame — glass panel */}
+              <div className="absolute inset-0 rounded-2xl border border-[rgba(80,210,255,0.4)] shadow-[0_0_30px_rgba(8,217,232,0.15)]"
+                style={{ background: 'rgba(5,30,55,0.45)', backdropFilter: 'blur(15px)' }}>
+
+                {/* AC inner body */}
+                <div className="absolute inset-4 bg-gradient-to-b from-slate-600/70 to-slate-700/70 rounded-xl border border-slate-500/30">
+                  {/* Vents */}
+                  <div className="absolute top-5 left-5 right-5 space-y-2.5">
+                    {[0.4, 0.3, 0.4, 0.3, 0.2].map((opacity, i) => (
+                      <div key={i} className="h-[3px] rounded-full" style={{ background: `rgba(148,163,184,${opacity})` }} />
+                    ))}
+                  </div>
+
+                  {/* Snowflake logo center */}
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <div className="w-14 h-14 rounded-full flex items-center justify-center" style={{ background: 'rgba(8,217,232,0.1)' }}>
+                      <Snowflake className="w-7 h-7 text-[#08D9E8]/50 animate-spin-slow" />
+                    </div>
+                  </div>
+
+                  {/* PCS logo inside AC */}
+                  <div className="absolute top-1/2 left-1/2 -translate-x-1/2 mt-4">
+                    <Image src="/logo.png" alt="Prime Cooling Solutions" width={28} height={28} className="opacity-40" />
+                  </div>
                 </div>
-                <div className="bg-slate-900/60 rounded-lg p-3">
-                  <div className="text-2xl font-bold text-teal-400">500+</div>
-                  <div className="text-[10px] text-slate-400 uppercase font-medium">Jobs</div>
-                </div>
-                <div className="bg-slate-900/60 rounded-lg p-3">
-                  <div className="text-2xl font-bold text-amber-400">13</div>
-                  <div className="text-[10px] text-slate-400 uppercase font-medium">Services</div>
-                </div>
-                <div className="bg-slate-900/60 rounded-lg p-3">
-                  <div className="text-2xl font-bold text-cyan-400">10</div>
-                  <div className="text-[10px] text-slate-400 uppercase font-medium">AMC Visits/Yr</div>
+
+                {/* Bottom dashboard panel */}
+                <div className="absolute bottom-0 left-0 right-0 h-20 rounded-b-2xl px-4 py-2 flex items-center justify-between"
+                  style={{ background: 'rgba(5,25,50,0.7)', borderTop: '1px solid rgba(80,210,255,0.25)' }}>
+                  {/* Temperature */}
+                  <div>
+                    <div className="text-2xl font-bold text-[#08D9E8] font-mono leading-none">22°C</div>
+                    <div className="text-[9px] text-slate-400 uppercase tracking-wider mt-0.5">Set Temp</div>
+                  </div>
+                  {/* Status */}
+                  <div className="text-right">
+                    <div className="flex items-center gap-1.5 justify-end">
+                      <div className="w-2 h-2 rounded-full bg-green-400 shadow-[0_0_8px_rgba(74,222,128,0.6)] animate-pulse" />
+                      <span className="text-[10px] text-slate-300 font-medium">COOLING</span>
+                    </div>
+                    <div className="text-[10px] text-[#08D9E8]/60 font-bold tracking-widest mt-1">PRIME COOLING</div>
+                  </div>
                 </div>
               </div>
-              <button
-                onClick={scrollToBooking}
-                aria-label="Scroll down to book a service"
-                className="w-full bg-cyan-500 hover:bg-cyan-400 text-slate-900 font-bold py-3 rounded-md transition-colors flex items-center justify-center gap-2"
-              >
-                <ArrowDown className="w-5 h-5" aria-hidden="true" />
-                Book Service Below
-              </button>
+
+              {/* Airflow particles rising from AC */}
+              {[
+                { left: '25%', delay: '0s', dur: '3s' },
+                { left: '35%', delay: '0.5s', dur: '4s' },
+                { left: '45%', delay: '1s', dur: '3.5s' },
+                { left: '60%', delay: '1.5s', dur: '4.5s' },
+              ].map((p, i) => (
+                <div
+                  key={i}
+                  className="absolute -bottom-2 w-1.5 h-1.5 rounded-full bg-[#08D9E8]/30"
+                  style={{ left: p.left, animation: `particle-drift ${p.dur} ease-in-out infinite ${p.delay}` }}
+                />
+              ))}
+            </div>
+
+            {/* ── Floating Glass Card: AC SERVICE (top-right) ── */}
+            <div className="absolute -top-4 right-0 lg:-right-8 animate-float-slow z-20" style={{ animationDelay: '0.5s' }}>
+              <div className="rounded-xl px-4 py-3 shadow-[0_10px_40px_rgba(0,0,0,0.25)]"
+                style={{
+                  background: 'rgba(5,30,55,0.55)',
+                  backdropFilter: 'blur(15px)',
+                  border: '1px solid rgba(80,210,255,0.45)',
+                }}>
+                <div className="flex items-center gap-2.5">
+                  <div className="w-9 h-9 rounded-lg flex items-center justify-center" style={{ background: 'rgba(8,217,232,0.15)' }}>
+                    <Snowflake className="w-4.5 h-4.5 text-[#08D9E8]" />
+                  </div>
+                  <div>
+                    <div className="text-[12px] font-bold text-white">AC SERVICE</div>
+                    <div className="text-[10px] text-[#D7E5F2]/60">Professional Cooling Care</div>
+                  </div>
+                </div>
+                <button onClick={scrollToBooking} className="mt-2 text-[11px] text-[#08D9E8] font-semibold flex items-center gap-1 hover:text-cyan-300 transition-colors">
+                  Book Now <ArrowRight className="w-3 h-3" />
+                </button>
+              </div>
+            </div>
+
+            {/* ── Floating Glass Card: MAINTENANCE (mid-right) ── */}
+            <div className="absolute top-[55%] -right-6 lg:-right-12 animate-float z-20 hidden lg:block" style={{ animationDelay: '1.5s' }}>
+              <div className="rounded-xl px-3.5 py-2.5 shadow-[0_10px_40px_rgba(0,0,0,0.25)]"
+                style={{
+                  background: 'rgba(5,30,55,0.55)',
+                  backdropFilter: 'blur(15px)',
+                  border: '1px solid rgba(80,210,255,0.45)',
+                }}>
+                <div className="flex items-center gap-2">
+                  <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ background: 'rgba(8,217,232,0.15)' }}>
+                    <Wrench className="w-4 h-4 text-[#08D9E8]" />
+                  </div>
+                  <div>
+                    <div className="text-[11px] font-bold text-white">MAINTENANCE</div>
+                    <div className="text-[9px] text-[#D7E5F2]/60">AMC Available</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* ── Floating Glass Card: FAST RESPONSE (bottom-center) ── */}
+            <div className="absolute -bottom-8 left-[15%] animate-float-reverse z-20" style={{ animationDelay: '1s' }}>
+              <div className="rounded-xl px-4 py-3 shadow-[0_10px_40px_rgba(0,0,0,0.25)]"
+                style={{
+                  background: 'rgba(5,30,55,0.55)',
+                  backdropFilter: 'blur(15px)',
+                  border: '1px solid rgba(80,210,255,0.45)',
+                }}>
+                <div className="flex items-center gap-2.5">
+                  <div className="w-9 h-9 rounded-lg flex items-center justify-center" style={{ background: 'rgba(245,158,11,0.15)' }}>
+                    <Zap className="w-4.5 h-4.5 text-amber-400" />
+                  </div>
+                  <div>
+                    <div className="text-[12px] font-bold text-white">FAST RESPONSE</div>
+                    <div className="text-[10px] text-[#D7E5F2]/60">Lahore-Wide Service</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* ── Brand watermark (subtle) ── */}
+            <div className="absolute top-[10%] right-[5%] pointer-events-none opacity-10 hidden lg:block">
+              <Image src="/logo.png" alt="" width={90} height={90} className="opacity-60" />
             </div>
           </div>
         </div>
