@@ -41,6 +41,8 @@ import {
   HardHat,
   Target,
   Eye,
+  Trash2,
+  Receipt,
 } from 'lucide-react';
 import { COMPANY, SERVICES, WHY_CHOOSE_US, SERVICE_METHODOLOGY, CLIENT_SEGMENTS, AMC_DETAILS, AC_TYPES, TIME_SLOTS, REGIONS, PROPERTY_TYPES } from '@/lib/constants';
 import { supabase, generateBookingId } from '@/lib/supabase';
@@ -90,8 +92,17 @@ export default function HomePage() {
   // ── Booking form state ──────────────────────────────────────
   const [submitting, setSubmitting] = useState(false);
   const [bookingSuccess, setBookingSuccess] = useState('');
+  const [selectedServices, setSelectedServices] = useState<string[]>([]);
+  const [invoiceData, setInvoiceData] = useState<{
+    id: string;
+    services: { title: string; price: string; amount: number }[];
+    total: number;
+    hasQuoteBased: boolean;
+    customerName: string;
+    date: string;
+  } | null>(null);
+
   const [formData, setFormData] = useState({
-    serviceId: '',
     acType: '',
     units: 1,
     problemDescription: '',
@@ -109,15 +120,46 @@ export default function HomePage() {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
+  // Toggle service selection
+  const toggleService = (serviceId: string) => {
+    setSelectedServices(prev =>
+      prev.includes(serviceId)
+        ? prev.filter(id => id !== serviceId)
+        : [...prev, serviceId]
+    );
+  };
+
+  // Calculate invoice totals
+  const getSelectedServiceDetails = () => {
+    return selectedServices.map(id => {
+      const svc = SERVICES.find(s => s.id === id);
+      return svc ? {
+        title: svc.title,
+        price: svc.priceText,
+        amount: svc.priceNumeric * Number(formData.units || 1),
+        unitPrice: svc.priceNumeric,
+        isQuoteBased: svc.priceNumeric === 0,
+      } : null;
+    }).filter(Boolean) as { title: string; price: string; amount: number; unitPrice: number; isQuoteBased: boolean }[];
+  };
+
+  const invoiceItems = getSelectedServiceDetails();
+  const fixedTotal = invoiceItems.reduce((sum, item) => sum + item.amount, 0);
+  const hasQuoteBased = invoiceItems.some(item => item.isQuoteBased);
+
   const handleBookingSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (selectedServices.length === 0) {
+      alert('Please select at least one service.');
+      return;
+    }
     setSubmitting(true);
     try {
       const id = await generateBookingId();
-      const serviceTitle = SERVICES.find(s => s.id === formData.serviceId)?.title || formData.serviceId;
+      const serviceTitles = selectedServices.map(sid => SERVICES.find(s => s.id === sid)?.title || sid).join(' + ');
       const { error } = await supabase.from('bookings').insert({
         id,
-        service_package: serviceTitle,
+        service_package: serviceTitles,
         appliance: formData.acType,
         unit_count: Number(formData.units),
         symptoms_notes: formData.problemDescription,
@@ -131,8 +173,18 @@ export default function HomePage() {
         email: formData.customerEmail,
       });
       if (error) throw error;
+      // Build invoice data
+      setInvoiceData({
+        id,
+        services: invoiceItems.map(item => ({ title: item.title, price: item.price, amount: item.amount })),
+        total: fixedTotal,
+        hasQuoteBased,
+        customerName: formData.customerName,
+        date: formData.scheduledDate,
+      });
       setBookingSuccess(id);
-      setFormData({ serviceId: '', acType: '', units: 1, problemDescription: '', scheduledDate: '', timeSlot: '', region: '', propertyType: '', fullAddress: '', customerName: '', customerPhone: '', customerEmail: '' });
+      setSelectedServices([]);
+      setFormData({ acType: '', units: 1, problemDescription: '', scheduledDate: '', timeSlot: '', region: '', propertyType: '', fullAddress: '', customerName: '', customerPhone: '', customerEmail: '' });
     } catch (err: unknown) {
       const message = err instanceof Error ? err.message : 'Unknown error';
       alert(`Error creating booking: ${message}`);
@@ -161,11 +213,11 @@ export default function HomePage() {
             priority
             quality={85}
           />
-          {/* Left-to-right gradient overlay — dark left for text, light right to show building */}
+          {/* Left-to-right gradient — minimal overlay, building clearly visible */}
           <div
             className="absolute inset-0"
             style={{
-              background: 'linear-gradient(90deg, rgba(3,20,40,0.92) 0%, rgba(3,25,48,0.75) 35%, rgba(3,25,48,0.35) 60%, rgba(3,25,48,0.10) 100%)',
+              background: 'linear-gradient(90deg, rgba(3,20,40,0.85) 0%, rgba(3,25,48,0.50) 28%, rgba(3,25,48,0.15) 50%, rgba(3,25,48,0.0) 100%)',
             }}
           />
           {/* Subtle cyan atmospheric glow on right */}
@@ -248,19 +300,19 @@ export default function HomePage() {
           </div>
 
           {/* ── RIGHT: 3D AC Visual (rendered image) ── */}
-          <div className="lg:w-[50%] w-full relative hidden md:block overflow-visible">
+          <div className="lg:w-[45%] w-full relative hidden md:block overflow-visible">
             {/* Subtle glow behind the AC image */}
             <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-              <div className="w-96 h-96 bg-[#08D9E8]/6 rounded-full blur-[100px] animate-glow-pulse" />
+              <div className="w-72 h-72 bg-[#08D9E8]/6 rounded-full blur-[80px] animate-glow-pulse" />
             </div>
             {/* 3D AC unit image with floating animation */}
-            <div className="relative animate-float lg:-mr-8 xl:-mr-12" style={{ animationDuration: '6s' }}>
+            <div className="relative animate-float" style={{ animationDuration: '6s' }}>
               <Image
                 src="/hero-ac.png"
                 alt="3D futuristic AC unit with smart cooling dashboard, temperature display showing 22°C, and floating service cards"
-                width={700}
-                height={580}
-                className="w-full h-auto drop-shadow-2xl max-w-none"
+                width={500}
+                height={420}
+                className="w-full h-auto drop-shadow-2xl"
                 priority
               />
             </div>
@@ -427,34 +479,159 @@ export default function HomePage() {
             </p>
           </div>
 
-          {bookingSuccess ? (
-            <div className="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-xl p-8 text-center">
-              <div className="w-16 h-16 rounded-full bg-green-100 dark:bg-green-900/40 flex items-center justify-center mx-auto mb-4">
-                <CheckCircle2 className="w-8 h-8 text-green-600 dark:text-green-400" aria-hidden="true" />
+          {bookingSuccess && invoiceData ? (
+            /* ── INVOICE / CONFIRMATION ── */
+            <div className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl shadow-lg overflow-hidden">
+              {/* Invoice Header */}
+              <div className="bg-gradient-to-r from-cyan-600 to-teal-600 px-6 py-5 text-white">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <Receipt className="w-8 h-8" />
+                    <div>
+                      <h3 className="text-xl font-bold">Booking Invoice</h3>
+                      <p className="text-cyan-100 text-sm">Prime Cooling Solutions</p>
+                    </div>
+                  </div>
+                  <div className="text-right">
+                    <div className="font-mono font-bold text-lg">{invoiceData.id}</div>
+                    <div className="text-cyan-100 text-sm">{invoiceData.date}</div>
+                  </div>
+                </div>
               </div>
-              <h3 className="text-2xl font-bold text-green-800 dark:text-green-300 mb-2">Booking Confirmed!</h3>
-              <p className="text-green-700 dark:text-green-400 mb-4">Your Reference ID: <span className="font-mono font-bold text-lg">{bookingSuccess}</span></p>
-              <p className="text-slate-600 dark:text-slate-400 mb-6">We&apos;ll contact you shortly on WhatsApp to confirm details.</p>
-              <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <Link href={`/track`} aria-label="Track your booking status" className="px-6 py-3 bg-green-600 hover:bg-green-500 text-white font-bold rounded-md transition-colors inline-flex items-center gap-2">
-                  <Search className="w-4 h-4" aria-hidden="true" /> Track Booking
+
+              {/* Customer Info */}
+              <div className="px-6 py-4 border-b border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900/50">
+                <div className="text-sm text-slate-500 dark:text-slate-400">Bill To</div>
+                <div className="font-semibold text-slate-900 dark:text-white">{invoiceData.customerName}</div>
+              </div>
+
+              {/* Service Items */}
+              <div className="px-6 py-4">
+                <table className="w-full">
+                  <thead>
+                    <tr className="text-left text-xs uppercase tracking-wider text-slate-500 dark:text-slate-400 border-b border-slate-200 dark:border-slate-700">
+                      <th className="pb-2">Service</th>
+                      <th className="pb-2 text-right">Rate</th>
+                      <th className="pb-2 text-right">Amount</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {invoiceData.services.map((svc, i) => (
+                      <tr key={i} className="border-b border-slate-100 dark:border-slate-800 last:border-0">
+                        <td className="py-3 text-sm font-medium text-slate-900 dark:text-white">{svc.title}</td>
+                        <td className="py-3 text-sm text-right text-slate-600 dark:text-slate-400">{svc.price}</td>
+                        <td className="py-3 text-sm text-right font-semibold text-slate-900 dark:text-white">
+                          {svc.amount > 0 ? `Rs. ${svc.amount.toLocaleString()}` : 'Quote-based'}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+
+              {/* Total */}
+              <div className="px-6 py-4 bg-slate-50 dark:bg-slate-900/50 border-t border-slate-200 dark:border-slate-700">
+                <div className="flex justify-between items-center">
+                  <span className="text-lg font-bold text-slate-900 dark:text-white">Total</span>
+                  <span className="text-2xl font-bold text-cyan-600 dark:text-cyan-400">
+                    Rs. {invoiceData.total.toLocaleString()}
+                    {invoiceData.hasQuoteBased && ' + Quote'}
+                  </span>
+                </div>
+                <div className="mt-3 flex items-center gap-2 text-sm text-amber-600 dark:text-amber-400">
+                  <span className="w-2 h-2 bg-amber-500 rounded-full" />
+                  Payment Method: <span className="font-bold">Cash on Delivery</span>
+                </div>
+                {invoiceData.hasQuoteBased && (
+                  <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">
+                    * Quote-based services will be assessed on-site. Final price confirmed before work begins.
+                  </p>
+                )}
+              </div>
+
+              {/* Actions */}
+              <div className="px-6 py-5 flex flex-col sm:flex-row gap-3">
+                <Link href="/track" className="flex-1 px-6 py-3 bg-green-600 hover:bg-green-500 text-white font-bold rounded-md transition-colors text-center inline-flex items-center justify-center gap-2">
+                  <Search className="w-4 h-4" /> Track Booking
                 </Link>
-                <button onClick={() => setBookingSuccess('')} aria-label="Book another service" className="px-6 py-3 border border-slate-300 dark:border-slate-700 text-slate-700 dark:text-slate-300 font-medium rounded-md hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors">
+                <button onClick={() => { setBookingSuccess(''); setInvoiceData(null); }} className="flex-1 px-6 py-3 border border-slate-300 dark:border-slate-700 text-slate-700 dark:text-slate-300 font-medium rounded-md hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors text-center">
                   Book Another Service
                 </button>
               </div>
             </div>
           ) : (
             <form onSubmit={handleBookingSubmit} className="bg-slate-50 dark:bg-slate-800/50 rounded-xl border border-slate-200 dark:border-slate-700 p-6 md:p-8 space-y-6">
-              {/* Row 1: Service + AC Type */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-                <div>
-                  <label htmlFor="serviceId" className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Service Required *</label>
-                  <select required id="serviceId" name="serviceId" value={formData.serviceId} onChange={handleChange} className="w-full bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-md px-4 py-2.5 text-slate-900 dark:text-white focus:ring-2 focus:ring-cyan-500 focus:outline-none">
-                    <option value="">-- Select a Service --</option>
-                    {SERVICES.map(s => <option key={s.id} value={s.id}>{s.title} — {s.priceText}</option>)}
-                  </select>
+              {/* Row 1: Multi-Select Services */}
+              <div>
+                <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Select Services * <span className="text-xs text-slate-500">(Select multiple)</span></label>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-2 max-h-[300px] overflow-y-auto p-1">
+                  {SERVICES.map(svc => (
+                    <label
+                      key={svc.id}
+                      className={`flex items-center gap-3 p-3 rounded-lg border cursor-pointer transition-all ${
+                        selectedServices.includes(svc.id)
+                          ? 'border-cyan-500 bg-cyan-50 dark:bg-cyan-900/20 ring-1 ring-cyan-500'
+                          : 'border-slate-200 dark:border-slate-700 hover:border-cyan-300 dark:hover:border-cyan-700'
+                      }`}
+                    >
+                      <input
+                        type="checkbox"
+                        checked={selectedServices.includes(svc.id)}
+                        onChange={() => toggleService(svc.id)}
+                        className="w-4 h-4 rounded border-slate-300 text-cyan-600 focus:ring-cyan-500"
+                      />
+                      <div className="flex-1 min-w-0">
+                        <div className="text-sm font-medium text-slate-900 dark:text-white truncate">{svc.title}</div>
+                        <div className="text-xs text-slate-500 dark:text-slate-400">{svc.priceText}</div>
+                      </div>
+                    </label>
+                  ))}
                 </div>
+              </div>
+
+              {/* Live Invoice Preview */}
+              {selectedServices.length > 0 && (
+                <div className="bg-white dark:bg-slate-900 rounded-lg border border-cyan-200 dark:border-cyan-800 p-4">
+                  <div className="flex items-center gap-2 mb-3">
+                    <Receipt className="w-4 h-4 text-cyan-600 dark:text-cyan-400" />
+                    <h4 className="text-sm font-bold text-slate-900 dark:text-white">Invoice Preview</h4>
+                    <span className="text-xs text-slate-500 ml-auto">{selectedServices.length} service(s)</span>
+                  </div>
+                  <div className="space-y-2">
+                    {invoiceItems.map((item, i) => (
+                      <div key={i} className="flex items-center justify-between text-sm">
+                        <div className="flex items-center gap-2 flex-1 min-w-0">
+                          <span className="text-slate-700 dark:text-slate-300 truncate">{item.title}</span>
+                          {Number(formData.units) > 1 && !item.isQuoteBased && (
+                            <span className="text-xs text-slate-500">×{formData.units}</span>
+                          )}
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <span className="font-semibold text-slate-900 dark:text-white whitespace-nowrap">
+                            {item.isQuoteBased ? 'Quote' : `Rs. ${item.amount.toLocaleString()}`}
+                          </span>
+                          <button type="button" onClick={() => toggleService(SERVICES[i]?.id || '')} className="text-red-400 hover:text-red-500 transition-colors">
+                            <Trash2 className="w-3.5 h-3.5" />
+                          </button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                  <div className="mt-3 pt-3 border-t border-slate-200 dark:border-slate-700 flex justify-between items-center">
+                    <span className="font-bold text-slate-900 dark:text-white">Estimated Total</span>
+                    <span className="text-lg font-bold text-cyan-600 dark:text-cyan-400">
+                      Rs. {fixedTotal.toLocaleString()}{hasQuoteBased ? ' + Quote' : ''}
+                    </span>
+                  </div>
+                  <div className="mt-1 text-xs text-slate-500 dark:text-slate-400 flex items-center gap-1">
+                    <span className="w-1.5 h-1.5 bg-amber-500 rounded-full" />
+                    Payment: Cash on Delivery
+                  </div>
+                </div>
+              )}
+
+              {/* Row 2: AC Type + Units */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                 <div>
                   <label htmlFor="acType" className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">AC Type *</label>
                   <select required id="acType" name="acType" value={formData.acType} onChange={handleChange} className="w-full bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-md px-4 py-2.5 text-slate-900 dark:text-white focus:ring-2 focus:ring-cyan-500 focus:outline-none">
@@ -462,22 +639,18 @@ export default function HomePage() {
                     {AC_TYPES.map(t => <option key={t.value} value={t.value}>{t.label}</option>)}
                   </select>
                 </div>
-              </div>
-
-              {/* Row 2: Units + Date */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                 <div>
                   <label htmlFor="units" className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Number of Units *</label>
                   <input type="number" required min="1" max="20" id="units" name="units" value={formData.units} onChange={handleChange} className="w-full bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-md px-4 py-2.5 text-slate-900 dark:text-white focus:ring-2 focus:ring-cyan-500 focus:outline-none" />
                 </div>
+              </div>
+
+              {/* Row 3: Date + Time Slot */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                 <div>
                   <label htmlFor="scheduledDate" className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Preferred Date *</label>
                   <input type="date" required id="scheduledDate" name="scheduledDate" value={formData.scheduledDate} onChange={handleChange} className="w-full bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-md px-4 py-2.5 text-slate-900 dark:text-white focus:ring-2 focus:ring-cyan-500 focus:outline-none" />
                 </div>
-              </div>
-
-              {/* Row 3: Time Slot + Region */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                 <div>
                   <label htmlFor="timeSlot" className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Time Slot *</label>
                   <select required id="timeSlot" name="timeSlot" value={formData.timeSlot} onChange={handleChange} className="w-full bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-md px-4 py-2.5 text-slate-900 dark:text-white focus:ring-2 focus:ring-cyan-500 focus:outline-none">
@@ -485,6 +658,10 @@ export default function HomePage() {
                     {TIME_SLOTS.map(t => <option key={t.value} value={t.value}>{t.label}</option>)}
                   </select>
                 </div>
+              </div>
+
+              {/* Row 4: Region + Property Type */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                 <div>
                   <label htmlFor="region" className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Area / Region *</label>
                   <select required id="region" name="region" value={formData.region} onChange={handleChange} className="w-full bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-md px-4 py-2.5 text-slate-900 dark:text-white focus:ring-2 focus:ring-cyan-500 focus:outline-none">
@@ -492,10 +669,6 @@ export default function HomePage() {
                     {REGIONS.map(r => <option key={r.value} value={r.value}>{r.label}</option>)}
                   </select>
                 </div>
-              </div>
-
-              {/* Row 4: Property Type + Address */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                 <div>
                   <label htmlFor="propertyType" className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Property Type *</label>
                   <select required id="propertyType" name="propertyType" value={formData.propertyType} onChange={handleChange} className="w-full bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-md px-4 py-2.5 text-slate-900 dark:text-white focus:ring-2 focus:ring-cyan-500 focus:outline-none">
@@ -503,13 +676,15 @@ export default function HomePage() {
                     {PROPERTY_TYPES.map(p => <option key={p.value} value={p.value}>{p.label}</option>)}
                   </select>
                 </div>
-                <div>
-                  <label htmlFor="fullAddress" className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Full Address *</label>
-                  <input type="text" required id="fullAddress" name="fullAddress" value={formData.fullAddress} onChange={handleChange} placeholder="Street, House/Office No, Landmark" className="w-full bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-md px-4 py-2.5 text-slate-900 dark:text-white focus:ring-2 focus:ring-cyan-500 focus:outline-none" />
-                </div>
               </div>
 
-              {/* Row 5: Name + Phone + Email */}
+              {/* Row 5: Address */}
+              <div>
+                <label htmlFor="fullAddress" className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Full Address *</label>
+                <input type="text" required id="fullAddress" name="fullAddress" value={formData.fullAddress} onChange={handleChange} placeholder="Street, House/Office No, Landmark" className="w-full bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-md px-4 py-2.5 text-slate-900 dark:text-white focus:ring-2 focus:ring-cyan-500 focus:outline-none" />
+              </div>
+
+              {/* Row 6: Name + Phone + Email */}
               <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
                 <div>
                   <label htmlFor="customerName" className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Full Name *</label>
@@ -534,19 +709,19 @@ export default function HomePage() {
               {/* Submit */}
               <button
                 type="submit"
-                disabled={submitting}
+                disabled={submitting || selectedServices.length === 0}
                 aria-label={submitting ? 'Submitting your booking' : 'Confirm your booking'}
                 className="w-full py-4 bg-gradient-to-r from-cyan-500 to-teal-500 hover:from-cyan-400 hover:to-teal-400 text-slate-900 font-bold text-lg rounded-md shadow-glow-cyan transition-all disabled:opacity-50 flex items-center justify-center gap-3"
               >
                 {submitting ? (
                   <><Loader2 className="w-5 h-5 animate-spin" aria-hidden="true" /> Submitting...</>
                 ) : (
-                  <><CalendarCheck className="w-5 h-5" aria-hidden="true" /> Confirm Booking</>
+                  <><CalendarCheck className="w-5 h-5" aria-hidden="true" /> Confirm Booking{selectedServices.length > 0 && ` — Rs. ${fixedTotal.toLocaleString()}${hasQuoteBased ? ' + Quote' : ''}`}</>
                 )}
               </button>
 
               <p className="text-center text-xs text-slate-500 dark:text-slate-500">
-                By booking, you agree to be contacted via WhatsApp/Phone. Working hours: Mon–Sat 9AM–7PM.
+                By booking, you agree to be contacted via WhatsApp/Phone. Payment: Cash on Delivery. Working hours: Mon–Sat 9AM–7PM.
               </p>
             </form>
           )}
