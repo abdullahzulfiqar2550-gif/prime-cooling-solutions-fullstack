@@ -161,11 +161,11 @@ export default function HomePage() {
             priority
             quality={85}
           />
-          {/* Left-to-right gradient overlay — dark left for text contrast, visible right */}
+          {/* Left-to-right gradient overlay — dark left for text, light right to show building */}
           <div
             className="absolute inset-0"
             style={{
-              background: 'linear-gradient(90deg, rgba(3,20,40,0.94) 0%, rgba(3,25,48,0.85) 30%, rgba(3,25,48,0.50) 60%, rgba(3,25,48,0.20) 100%)',
+              background: 'linear-gradient(90deg, rgba(3,20,40,0.92) 0%, rgba(3,25,48,0.75) 35%, rgba(3,25,48,0.35) 60%, rgba(3,25,48,0.10) 100%)',
             }}
           />
           {/* Subtle cyan atmospheric glow on right */}
@@ -248,19 +248,19 @@ export default function HomePage() {
           </div>
 
           {/* ── RIGHT: 3D AC Visual (rendered image) ── */}
-          <div className="lg:w-[48%] w-full relative hidden md:block">
+          <div className="lg:w-[50%] w-full relative hidden md:block overflow-visible">
             {/* Subtle glow behind the AC image */}
             <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-              <div className="w-80 h-80 bg-[#08D9E8]/6 rounded-full blur-[100px] animate-glow-pulse" />
+              <div className="w-96 h-96 bg-[#08D9E8]/6 rounded-full blur-[100px] animate-glow-pulse" />
             </div>
             {/* 3D AC unit image with floating animation */}
-            <div className="relative animate-float" style={{ animationDuration: '6s' }}>
+            <div className="relative animate-float lg:-mr-8 xl:-mr-12" style={{ animationDuration: '6s' }}>
               <Image
                 src="/hero-ac.png"
                 alt="3D futuristic AC unit with smart cooling dashboard, temperature display showing 22°C, and floating service cards"
-                width={600}
-                height={500}
-                className="w-full h-auto drop-shadow-2xl"
+                width={700}
+                height={580}
+                className="w-full h-auto drop-shadow-2xl max-w-none"
                 priority
               />
             </div>
