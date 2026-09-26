@@ -1,21 +1,33 @@
 import React from 'react';
+import { Shield, Clock, Phone } from 'lucide-react';
 import { COMPANY } from '@/lib/constants';
 
 export function EmergencyBanner() {
   return (
-    <div className="bg-slate-900 dark:bg-slate-950 text-white text-xs sm:text-sm py-2 px-4 w-full">
-      <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-2">
-        <div className="flex items-center gap-2">
-          <span className="relative flex h-2.5 w-2.5">
-            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
-            <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-green-500"></span>
-          </span>
-          <span className="text-slate-300 hidden md:inline">Licensed Mechanical Engineer • Documented Service</span>
-          <span className="text-slate-300 md:hidden">Professional HVAC Service</span>
+    <div className="bg-[#061A2F] text-white text-xs py-2.5 px-4 w-full border-b border-white/5">
+      <div className="max-w-7xl mx-auto flex items-center justify-between">
+        {/* Left — Credentials */}
+        <div className="flex items-center gap-3 text-white/80">
+          <div className="flex items-center gap-1.5">
+            <Shield className="w-3.5 h-3.5 text-[#00D4E8]" aria-hidden="true" />
+            <span className="hidden sm:inline">Licensed Mechanical Engineer</span>
+          </div>
+          <span className="hidden md:inline text-white/30">•</span>
+          <span className="hidden md:inline">Documented Service</span>
+          <span className="hidden lg:inline text-white/30">•</span>
+          <span className="hidden lg:inline">100% Genuine Parts</span>
         </div>
-        <div className="flex items-center gap-4">
-          <span className="text-slate-300 hidden sm:inline">{COMPANY.workingHours}</span>
-          <a href={`tel:${COMPANY.phone.replace(/-/g, '')}`} className="font-semibold text-cyan-400 hover:text-cyan-300 transition-colors">
+        {/* Right — Hours + Phone */}
+        <div className="flex items-center gap-4 text-white/80">
+          <div className="hidden sm:flex items-center gap-1.5">
+            <Clock className="w-3.5 h-3.5 text-[#00D4E8]" aria-hidden="true" />
+            <span>Mon – Sat 9AM – 7PM</span>
+          </div>
+          <a
+            href={`tel:${COMPANY.phone.replace(/-/g, '')}`}
+            className="flex items-center gap-1.5 font-semibold text-[#00D4E8] hover:text-white transition-colors"
+          >
+            <Phone className="w-3.5 h-3.5" aria-hidden="true" />
             {COMPANY.phone}
           </a>
         </div>

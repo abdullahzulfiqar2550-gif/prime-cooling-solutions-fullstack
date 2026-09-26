@@ -3,59 +3,81 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { Menu, X, Phone } from 'lucide-react';
-import { ThemeToggle } from '@/components/ui/ThemeToggle';
-import { NAV_ITEMS, COMPANY } from '@/lib/constants';
+import { Menu, X, Phone, CalendarCheck, ChevronDown } from 'lucide-react';
+import { COMPANY } from '@/lib/constants';
+
+const NAV_LINKS = [
+  { label: 'Home', href: '/', active: true },
+  { label: 'Services', href: '/services', hasDropdown: true },
+  { label: 'AMC', href: '/amc' },
+  { label: 'About', href: '/about' },
+  { label: 'Track Booking', href: '/track' },
+  { label: 'Contact', href: '/contact' },
+];
 
 export function Header() {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <header className="sticky top-0 z-40 w-full bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 transition-colors">
+    <header className="sticky top-0 z-40 w-full bg-white shadow-sm">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-16">
-          <div className="flex-shrink-0 flex items-center">
-            <Link href="/" className="flex items-center gap-3">
-              <Image src="/logo.png" alt="Prime Cooling Solutions" width={44} height={44} className="rounded-md" priority />
+        <div className="flex justify-between items-center h-[68px]">
+          {/* Logo */}
+          <div className="flex-shrink-0">
+            <Link href="/" className="flex items-center gap-2.5">
+              <Image src="/logo.png" alt="Prime Cooling Solutions" width={42} height={42} className="rounded-md" priority />
               <div className="leading-tight">
-                <span className="font-bold text-lg text-slate-900 dark:text-white tracking-tight block">PRIME COOLING</span>
-                <span className="font-semibold text-[11px] text-cyan-600 dark:text-cyan-400 tracking-widest block">SOLUTIONS</span>
+                <span className="font-extrabold text-[17px] text-[#061A2F] tracking-tight block">PRIME COOLING</span>
+                <span className="font-bold text-[10px] text-[#00D4E8] tracking-[0.2em] block">SOLUTIONS</span>
               </div>
             </Link>
           </div>
 
-          <nav className="hidden md:flex items-center space-x-8">
-            {NAV_ITEMS.map((item) => (
-              <Link key={item.label} href={item.href} className="text-sm font-medium text-slate-600 hover:text-cyan-600 dark:text-slate-300 dark:hover:text-cyan-400 transition-colors">
+          {/* Desktop Nav */}
+          <nav className="hidden lg:flex items-center gap-7">
+            {NAV_LINKS.map((item) => (
+              <Link
+                key={item.label}
+                href={item.href}
+                className={`text-[14px] font-medium transition-colors relative pb-1 flex items-center gap-1 ${
+                  item.active
+                    ? 'text-[#00D4E8] border-b-2 border-[#00D4E8]'
+                    : 'text-[#061A2F]/70 hover:text-[#00D4E8]'
+                }`}
+              >
                 {item.label}
+                {item.hasDropdown && <ChevronDown className="w-3.5 h-3.5" />}
               </Link>
             ))}
           </nav>
 
-          <div className="hidden md:flex items-center space-x-3">
-            <ThemeToggle />
+          {/* Desktop Right */}
+          <div className="hidden lg:flex items-center gap-4">
             <a
               href={`tel:${COMPANY.phone.replace(/-/g, '')}`}
-              className="inline-flex items-center gap-1.5 px-3 py-2 text-sm font-medium text-slate-700 dark:text-slate-300 hover:text-cyan-600 dark:hover:text-cyan-400 transition-colors"
-              aria-label="Call us"
+              className="flex items-center gap-2 text-[14px] font-semibold text-[#061A2F] hover:text-[#00D4E8] transition-colors"
             >
-              <Phone className="w-4 h-4" />
+              <Phone className="w-4 h-4 text-[#00D4E8]" />
               {COMPANY.phone}
             </a>
             <Link
               href="/book"
-              className="inline-flex items-center justify-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-slate-900 bg-gradient-to-r from-cyan-400 to-teal-400 hover:from-cyan-300 hover:to-teal-300 transition-all focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cyan-500"
+              className="inline-flex items-center gap-2 px-5 py-2.5 bg-[#00D4E8] hover:bg-[#00bdd0] text-[#061A2F] font-bold text-[14px] rounded-lg transition-all hover:-translate-y-0.5 hover:shadow-lg hover:shadow-cyan-500/20"
             >
+              <CalendarCheck className="w-4 h-4" />
               Book Online
             </Link>
           </div>
 
-          <div className="flex md:hidden items-center space-x-2">
-            <ThemeToggle />
+          {/* Mobile Toggle */}
+          <div className="flex lg:hidden items-center gap-2">
+            <a href={`tel:${COMPANY.phone.replace(/-/g, '')}`} className="p-2 text-[#00D4E8]" aria-label="Call us">
+              <Phone className="w-5 h-5" />
+            </a>
             <button
               type="button"
               onClick={() => setIsOpen(!isOpen)}
-              className="inline-flex items-center justify-center p-2 rounded-md text-slate-400 hover:text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-cyan-500"
+              className="p-2 rounded-md text-[#061A2F] hover:bg-slate-100"
               aria-expanded={isOpen}
               aria-label="Toggle menu"
             >
@@ -65,18 +87,29 @@ export function Header() {
         </div>
       </div>
 
+      {/* Mobile Menu */}
       {isOpen && (
-        <div className="md:hidden bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800">
-          <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-            {NAV_ITEMS.map((item) => (
-              <Link key={item.label} href={item.href} className="block px-3 py-2 rounded-md text-base font-medium text-slate-700 hover:text-slate-900 hover:bg-slate-50 dark:text-slate-300 dark:hover:text-white dark:hover:bg-slate-800" onClick={() => setIsOpen(false)}>
+        <div className="lg:hidden bg-white border-t border-slate-100 shadow-lg">
+          <div className="px-4 pt-3 pb-4 space-y-1">
+            {NAV_LINKS.map((item) => (
+              <Link
+                key={item.label}
+                href={item.href}
+                className={`block px-3 py-2.5 rounded-lg text-[15px] font-medium transition-colors ${
+                  item.active
+                    ? 'text-[#00D4E8] bg-cyan-50'
+                    : 'text-[#061A2F] hover:bg-slate-50'
+                }`}
+                onClick={() => setIsOpen(false)}
+              >
                 {item.label}
               </Link>
             ))}
-            <a href={`tel:${COMPANY.phone.replace(/-/g, '')}`} className="flex items-center gap-2 px-3 py-2 text-base font-medium text-slate-700 dark:text-slate-300" onClick={() => setIsOpen(false)}>
-              <Phone className="w-4 h-4" /> {COMPANY.phone}
-            </a>
-            <Link href="/book" className="block w-full text-center mt-4 px-4 py-2 border border-transparent rounded-md shadow-sm text-base font-medium text-slate-900 bg-cyan-400 hover:bg-cyan-500" onClick={() => setIsOpen(false)}>
+            <Link
+              href="/book"
+              className="block w-full text-center mt-3 px-4 py-3 bg-[#00D4E8] text-[#061A2F] font-bold rounded-lg"
+              onClick={() => setIsOpen(false)}
+            >
               Book Online
             </Link>
           </div>
