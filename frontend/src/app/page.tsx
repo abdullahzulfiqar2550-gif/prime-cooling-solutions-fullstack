@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import React, { useState } from 'react';
 import Link from 'next/link';
@@ -47,7 +47,7 @@ import {
 import { COMPANY, SERVICES, WHY_CHOOSE_US, SERVICE_METHODOLOGY, CLIENT_SEGMENTS, AMC_DETAILS, AC_TYPES, TIME_SLOTS, REGIONS, PROPERTY_TYPES } from '@/lib/constants';
 import { supabase, generateBookingId } from '@/lib/supabase';
 
-/* ─── Icon map for dynamic icon rendering (avoids import *) ──────────── */
+/* â”€â”€â”€ Icon map for dynamic icon rendering (avoids import *) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 const ICON_MAP: Record<string, React.ComponentType<{ className?: string }>> = {
   Search,
   Wrench,
@@ -89,7 +89,7 @@ function DIcon({ name, className }: { name: string; className?: string }) {
 export default function HomePage() {
   const primaryServices = SERVICES.slice(0, 6);
 
-  // ── Booking form state ──────────────────────────────────────
+  // â”€â”€ Booking form state â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   const [submitting, setSubmitting] = useState(false);
   const [bookingSuccess, setBookingSuccess] = useState('');
   const [selectedServices, setSelectedServices] = useState<string[]>([]);
@@ -197,7 +197,7 @@ export default function HomePage() {
     document.getElementById('book-now')?.scrollIntoView({ behavior: 'smooth' });
   };
 
-  // ── Quick booking form (hero sidebar) ─────────────────────
+  // â”€â”€ Quick booking form (hero sidebar) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   const [quickName, setQuickName] = useState('');
   const [quickPhone, setQuickPhone] = useState('');
   const [quickService, setQuickService] = useState('');
@@ -234,278 +234,265 @@ export default function HomePage() {
     }
   };
 
-  // ── Promo config (easily toggled) ─────────────────────────
+  // â”€â”€ Promo config (easily toggled) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   const PROMO = { enabled: true, discount: '30%', label: 'ON AMC PACKAGES', note: 'Limited Time Offer' };
 
-  // ── Stats (configurable business data) ────────────────────
+  // â”€â”€ Stats (configurable business data) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   const STATS = [
-    { value: '500+', label: 'Happy Customers', icon: '😊' },
-    { value: '4.9/5', label: 'Customer Rating', icon: '⭐' },
-    { value: '5+ Years', label: 'Of Experience', icon: '🏆' },
-    { value: 'Lahore', label: 'Service Area', icon: '📍' },
+    { value: '500+', label: 'Happy Customers', icon: 'ðŸ˜Š' },
+    { value: '4.9/5', label: 'Customer Rating', icon: 'â­' },
+    { value: '5+ Years', label: 'Of Experience', icon: 'ðŸ†' },
+    { value: 'Lahore', label: 'Service Area', icon: 'ðŸ“' },
   ];
 
   return (
     <div className="flex flex-col min-h-screen">
-      {/* ═══════════════════════════════════════════════════════════════
-          HERO — Premium HVAC Hero Section matching reference design
-         ═══════════════════════════════════════════════════════════════ */}
-      <section className="relative text-white overflow-hidden">
-        {/* Background Image */}
+      {/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+          HERO â€” Exact recreation of reference design
+         â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
+      <section className="relative text-white overflow-hidden min-h-[92vh]">
+        {/* â”€â”€ Background: building scene with lighter gradient â”€â”€ */}
         <div className="absolute inset-0 z-0">
           <Image
             src="/hero-bg.jpg"
-            alt="Prime Cooling Solutions HVAC engineers at modern commercial building"
+            alt="Prime Cooling Solutions â€“ commercial building, service van, HVAC technicians"
             fill
             className="object-cover object-center"
             priority
             quality={90}
           />
-          {/* Gradient overlay — dark left for text readability, lighter right */}
-          <div
-            className="absolute inset-0"
-            style={{
-              background: 'linear-gradient(100deg, rgba(6,26,47,0.92) 0%, rgba(6,26,47,0.80) 35%, rgba(6,26,47,0.45) 55%, rgba(6,26,47,0.25) 75%, rgba(6,26,47,0.40) 100%)',
-            }}
-          />
+          {/* Gradient: strong left for text, transparent center so building/AC/van visible, slight darkening right for form contrast */}
+          <div className="absolute inset-0" style={{
+            background: 'linear-gradient(95deg, rgba(4,18,36,0.93) 0%, rgba(4,18,36,0.82) 28%, rgba(4,18,36,0.25) 48%, rgba(4,18,36,0.08) 62%, rgba(4,18,36,0.35) 85%, rgba(4,18,36,0.55) 100%)',
+          }} />
         </div>
 
-        {/* Main Hero Content */}
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 py-12 lg:py-16">
-          <div className="flex flex-col lg:flex-row gap-8 lg:gap-6">
+        {/* â”€â”€ Hero Grid: 3 zones â”€â”€ */}
+        <div className="relative z-10 max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 h-full">
+          <div className="flex flex-col lg:flex-row min-h-[75vh] pt-8 pb-4 lg:pt-10 lg:pb-0">
 
-            {/* ── LEFT COLUMN: Content ── */}
-            <div className="lg:w-[55%] w-full">
+            {/* â•â•â• ZONE 1: Left Content (text, features, CTAs) â•â•â• */}
+            <div className="lg:w-[42%] w-full flex flex-col justify-center z-10 pb-6 lg:pb-0">
+
               {/* Pill Badge */}
-              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full mb-6"
-                style={{ background: 'rgba(0,212,232,0.08)', border: '1px solid rgba(0,212,232,0.35)', backdropFilter: 'blur(8px)' }}>
+              <div className="inline-flex items-center gap-2 px-5 py-2 rounded-full w-fit mb-5"
+                style={{ background: 'rgba(0,212,232,0.08)', border: '1px solid rgba(0,212,232,0.4)', backdropFilter: 'blur(8px)' }}>
                 <Snowflake className="w-4 h-4 text-[#00D4E8]" />
-                <span className="text-[13px] font-medium">
+                <span className="text-[13px] font-medium tracking-wide">
                   <span className="text-[#00D4E8]">Your Comfort</span>
-                  <span className="text-white/40 mx-2">•</span>
-                  <span className="text-white/90">Our Priority</span>
+                  <span className="text-white/30 mx-1.5">â€¢</span>
+                  <span className="text-white/80">Our Priority</span>
                 </span>
               </div>
 
-              {/* Main Headline */}
-              <h1 className="text-[38px] sm:text-[48px] md:text-[56px] lg:text-[62px] font-extrabold leading-[1.05] tracking-tight mb-5">
+              {/* MAIN HEADLINE â€” BIG & BOLD */}
+              <h1 className="text-[48px] sm:text-[56px] md:text-[64px] lg:text-[72px] xl:text-[80px] font-black leading-[0.95] tracking-tight mb-5">
                 Professional AC<br />
                 Service &amp;<br />
                 <span className="text-[#00D4E8]">HVAC Solutions</span>
               </h1>
 
-              {/* Description */}
-              <p className="text-[15px] md:text-[16px] text-white/75 mb-8 max-w-[500px] leading-relaxed">
+              {/* Supporting paragraph */}
+              <p className="text-[14px] md:text-[15px] text-white/65 mb-7 max-w-[440px] leading-relaxed">
                 Stay cool, stay comfortable! We provide expert AC installation,
                 repair and maintenance for homes and businesses across Lahore.
-                Fast, reliable and affordable service — always.
+                Fast, reliable and affordable service â€” always.
               </p>
 
-              {/* Service Features Row */}
-              <div className="flex flex-wrap gap-6 mb-8">
+              {/* â”€â”€ Service Features: SINGLE ROW with separators â”€â”€ */}
+              <div className="flex items-center gap-0 mb-7 overflow-x-auto">
                 {[
-                  { icon: <Hammer className="w-5 h-5" />, title: 'AC Installation', sub: '(All Brands)' },
-                  { icon: <Wrench className="w-5 h-5" />, title: 'AC Repair', sub: '(All Types)' },
-                  { icon: <ShieldCheck className="w-5 h-5" />, title: 'AMC Service', sub: '(Annual Maintenance)' },
-                  { icon: <Building2 className="w-5 h-5" />, title: 'Commercial &', sub: 'Residential' },
+                  { icon: <Hammer className="w-4 h-4" />, title: 'AC Installation', sub: '(All Brands)' },
+                  { icon: <Wrench className="w-4 h-4" />, title: 'AC Repair', sub: '(All Types)' },
+                  { icon: <ShieldCheck className="w-4 h-4" />, title: 'AMC Service', sub: '(Annual Maintenance)' },
+                  { icon: <Building2 className="w-4 h-4" />, title: 'Commercial &', sub: 'Residential' },
                 ].map((feat, i) => (
-                  <div key={i} className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-full bg-[#00D4E8]/15 border border-[#00D4E8]/30 flex items-center justify-center text-[#00D4E8]">
-                      {feat.icon}
+                  <div key={i} className="flex items-center">
+                    <div className="flex items-center gap-2 px-3 flex-shrink-0">
+                      <div className="w-9 h-9 rounded-full border border-[#00D4E8]/40 bg-[#00D4E8]/10 flex items-center justify-center text-[#00D4E8] flex-shrink-0">
+                        {feat.icon}
+                      </div>
+                      <div className="min-w-0">
+                        <div className="text-[11px] font-bold text-white whitespace-nowrap">{feat.title}</div>
+                        <div className="text-[9px] text-white/40 whitespace-nowrap">{feat.sub}</div>
+                      </div>
                     </div>
-                    <div>
-                      <div className="text-[13px] font-semibold text-white">{feat.title}</div>
-                      <div className="text-[11px] text-white/50">{feat.sub}</div>
-                    </div>
-                    {i < 3 && <div className="hidden md:block w-px h-8 bg-white/10 ml-3" />}
+                    {i < 3 && <div className="w-px h-7 bg-white/15 flex-shrink-0" />}
                   </div>
                 ))}
               </div>
 
-              {/* CTA Buttons */}
-              <div className="flex flex-wrap gap-4 mb-6">
+              {/* â”€â”€ CTA Buttons â”€â”€ */}
+              <div className="flex flex-wrap gap-3 mb-5">
                 <button
                   onClick={scrollToBooking}
-                  aria-label="Book a service"
-                  className="group px-7 py-3.5 rounded-lg font-bold text-[15px] text-[#061A2F] flex items-center gap-2 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-cyan-500/30"
+                  className="group px-6 py-3 rounded-lg font-bold text-[14px] text-[#061A2F] flex items-center gap-2 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-cyan-400/30"
                   style={{ background: 'linear-gradient(135deg, #00D4E8, #00C4D6)' }}
                 >
-                  <CalendarCheck className="w-4.5 h-4.5" /> Book Service Now
-                  <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                  <CalendarCheck className="w-4 h-4" /> Book Service Now
+                  <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
                 </button>
                 <a
                   href={`tel:${COMPANY.phone.replace(/-/g, '')}`}
-                  className="px-7 py-3.5 rounded-lg font-semibold text-[15px] text-white flex items-center gap-2 transition-all duration-300 hover:-translate-y-1"
+                  className="px-6 py-3 rounded-lg font-semibold text-[14px] text-white flex items-center gap-2 transition-all duration-300 hover:-translate-y-1"
                   style={{ background: 'rgba(6,26,47,0.5)', border: '1px solid rgba(0,212,232,0.4)', backdropFilter: 'blur(8px)' }}
                 >
-                  <Phone className="w-4.5 h-4.5 text-[#00D4E8]" /> Call Now
+                  <Phone className="w-4 h-4 text-[#00D4E8]" /> Call Now
                 </a>
               </div>
 
-              {/* Trust Points */}
-              <div className="flex flex-wrap gap-5 text-[13px] text-white/60">
-                {['Experienced Technicians', 'Genuine Parts', 'On-Time Service', 'Affordable Rates'].map((point, i) => (
-                  <span key={i} className="flex items-center gap-1.5">
-                    <CheckCircle2 className="w-4 h-4 text-[#00D4E8]" /> {point}
+              {/* Trust Points â€” single row */}
+              <div className="flex flex-wrap gap-4 text-[11px] text-white/50">
+                {['Experienced Technicians', 'Genuine Parts', 'On-Time Service', 'Affordable Rates'].map((pt, i) => (
+                  <span key={i} className="flex items-center gap-1">
+                    <CheckCircle2 className="w-3.5 h-3.5 text-[#00D4E8]/70" /> {pt}
                   </span>
                 ))}
               </div>
             </div>
 
-            {/* ── RIGHT COLUMN: AC Visual + Booking Form ── */}
-            <div className="lg:w-[45%] w-full relative">
+            {/* â•â•â• ZONE 2: Center â€” scene shows through, floating cards only â•â•â• */}
+            <div className="hidden lg:flex lg:w-[33%] relative items-end justify-center pb-16">
+
+              {/* Floating Card: 22Â°C */}
+              <div className="absolute top-[22%] left-[8%] animate-float-slow z-10" style={{ animationDuration: '5s' }}>
+                <div className="flex items-center gap-2.5 px-3.5 py-2.5 rounded-xl shadow-lg"
+                  style={{ background: 'rgba(4,18,36,0.80)', border: '1px solid rgba(0,212,232,0.35)', backdropFilter: 'blur(14px)' }}>
+                  <div className="w-8 h-8 rounded-full bg-[#00D4E8]/15 flex items-center justify-center">
+                    <Snowflake className="w-4 h-4 text-[#00D4E8]" />
+                  </div>
+                  <div>
+                    <div className="text-[20px] font-extrabold text-white leading-none">22Â°C</div>
+                    <div className="text-[9px] text-white/50 font-medium">Perfect Cooling</div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Floating Card: AMC */}
+              <div className="absolute top-[18%] right-[-5%] animate-float z-10" style={{ animationDuration: '5.5s', animationDelay: '0.8s' }}>
+                <div className="flex items-center gap-2.5 px-3.5 py-2.5 rounded-xl shadow-lg"
+                  style={{ background: 'rgba(4,18,36,0.80)', border: '1px solid rgba(0,212,232,0.35)', backdropFilter: 'blur(14px)' }}>
+                  <div className="w-8 h-8 rounded-full bg-[#00D4E8]/15 flex items-center justify-center">
+                    <Shield className="w-4 h-4 text-[#00D4E8]" />
+                  </div>
+                  <div>
+                    <div className="text-[13px] font-bold text-white">AMC Available</div>
+                    <div className="text-[9px] text-white/50">Stay Worry Free</div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Floating Card: Fast Response */}
+              <div className="absolute bottom-[30%] right-[-10%] animate-float-reverse z-10" style={{ animationDuration: '4.5s', animationDelay: '0.3s' }}>
+                <div className="flex items-center gap-2.5 px-3.5 py-2.5 rounded-xl shadow-lg"
+                  style={{ background: 'rgba(4,18,36,0.80)', border: '1px solid rgba(0,212,232,0.35)', backdropFilter: 'blur(14px)' }}>
+                  <div className="w-8 h-8 rounded-full bg-[#00D4E8]/15 flex items-center justify-center">
+                    <Zap className="w-4 h-4 text-[#00D4E8]" />
+                  </div>
+                  <div>
+                    <div className="text-[13px] font-bold text-white">Fast Response</div>
+                    <div className="text-[9px] text-white/50">Within 24 Hours</div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Decorative handwritten text */}
+              <div className="absolute bottom-[12%] left-[15%] z-10 pointer-events-none select-none">
+                <p className="text-white/15 text-[26px] leading-tight italic" style={{ fontFamily: "'Georgia', serif" }}>
+                  &ldquo;Cooler Spaces<br />Better Lives&rdquo;
+                </p>
+              </div>
+            </div>
+
+            {/* â•â•â• ZONE 3: Right â€” Promo Badge + Quick Booking Form â•â•â• */}
+            <div className="lg:w-[25%] w-full flex flex-col items-end justify-start pt-0 lg:pt-4 z-20">
+
               {/* Promo Badge */}
               {PROMO.enabled && (
-                <div className="absolute -top-2 right-0 lg:right-4 z-20 hidden md:block">
-                  <div className="bg-[#00D4E8] text-[#061A2F] px-4 py-3 rounded-xl text-center shadow-lg shadow-cyan-500/20">
-                    <div className="text-[11px] font-bold uppercase tracking-wider">UP TO</div>
-                    <div className="text-[32px] font-black leading-none">
-                      {PROMO.discount}<span className="text-[16px] align-top">OFF</span>
+                <div className="hidden md:block mb-4 self-end">
+                  <div className="flex gap-0">
+                    <div className="bg-[#00D4E8] text-[#061A2F] px-4 py-3 rounded-l-xl text-center">
+                      <div className="text-[9px] font-bold uppercase tracking-widest">UP TO</div>
+                      <div className="text-[34px] font-black leading-none -mt-0.5">
+                        {PROMO.discount}<span className="text-[14px] align-top font-extrabold">OFF</span>
+                      </div>
                     </div>
-                  </div>
-                  <div className="bg-[#061A2F] text-white px-3 py-2 rounded-b-lg text-center -mt-1">
-                    <div className="text-[10px] font-bold uppercase tracking-wider">{PROMO.label}</div>
-                    <div className="text-[9px] text-white/60 italic">{PROMO.note}</div>
+                    <div className="bg-[#061A2F] text-white px-3 py-3 rounded-r-xl border border-l-0 border-white/10 flex flex-col justify-center">
+                      <div className="text-[9px] font-bold uppercase tracking-wider">{PROMO.label}</div>
+                      <div className="text-[8px] text-white/50 italic mt-0.5">{PROMO.note}</div>
+                    </div>
                   </div>
                 </div>
               )}
 
-              {/* AC Image with Floating Cards */}
-              <div className="relative hidden md:block mb-4">
-                {/* AC Image */}
-                <div className="relative animate-float" style={{ animationDuration: '6s' }}>
-                  <Image
-                    src="/hero-ac.png"
-                    alt="Premium wall-mounted split AC unit with smart cooling display"
-                    width={500}
-                    height={400}
-                    className="w-full max-w-[480px] h-auto drop-shadow-2xl mx-auto"
-                    priority
-                  />
-                </div>
-
-                {/* Floating Card: 22°C */}
-                <div className="absolute top-[15%] left-[5%] animate-float-slow z-10"
-                  style={{ animationDuration: '5s', animationDelay: '0.5s' }}>
-                  <div className="flex items-center gap-2.5 px-4 py-2.5 rounded-xl"
-                    style={{ background: 'rgba(6,26,47,0.75)', border: '1px solid rgba(0,212,232,0.3)', backdropFilter: 'blur(12px)' }}>
-                    <div className="w-8 h-8 rounded-full bg-[#00D4E8]/20 flex items-center justify-center">
-                      <Snowflake className="w-4 h-4 text-[#00D4E8]" />
-                    </div>
-                    <div>
-                      <div className="text-[18px] font-bold text-white">22°C</div>
-                      <div className="text-[10px] text-white/60">Perfect Cooling</div>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Floating Card: AMC */}
-                <div className="absolute top-[10%] right-[2%] animate-float z-10"
-                  style={{ animationDuration: '5.5s', animationDelay: '1s' }}>
-                  <div className="flex items-center gap-2.5 px-4 py-2.5 rounded-xl"
-                    style={{ background: 'rgba(6,26,47,0.75)', border: '1px solid rgba(0,212,232,0.3)', backdropFilter: 'blur(12px)' }}>
-                    <div className="w-8 h-8 rounded-full bg-[#00D4E8]/20 flex items-center justify-center">
-                      <Shield className="w-4 h-4 text-[#00D4E8]" />
-                    </div>
-                    <div>
-                      <div className="text-[14px] font-bold text-white">AMC Available</div>
-                      <div className="text-[10px] text-white/60">Stay Worry Free</div>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Floating Card: Fast Response */}
-                <div className="absolute bottom-[20%] right-[5%] animate-float-reverse z-10"
-                  style={{ animationDuration: '4.5s', animationDelay: '0.3s' }}>
-                  <div className="flex items-center gap-2.5 px-4 py-2.5 rounded-xl"
-                    style={{ background: 'rgba(6,26,47,0.75)', border: '1px solid rgba(0,212,232,0.3)', backdropFilter: 'blur(12px)' }}>
-                    <div className="w-8 h-8 rounded-full bg-[#00D4E8]/20 flex items-center justify-center">
-                      <Zap className="w-4 h-4 text-[#00D4E8]" />
-                    </div>
-                    <div>
-                      <div className="text-[14px] font-bold text-white">Fast Response</div>
-                      <div className="text-[10px] text-white/60">Within 24 Hours</div>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Decorative Message */}
-                <div className="absolute bottom-[5%] left-[20%] z-10 pointer-events-none">
-                  <p className="text-white/20 text-[22px] italic" style={{ fontFamily: "'Georgia', serif" }}>
-                    &ldquo;Cooler Spaces<br />Better Lives&rdquo;
-                  </p>
-                </div>
-              </div>
-
               {/* Quick Service Booking Card */}
-              <div className="bg-white rounded-2xl shadow-2xl p-5 lg:absolute lg:top-[8%] lg:right-0 lg:w-[280px] xl:w-[300px] z-20">
+              <div className="w-full max-w-[300px] bg-white rounded-2xl shadow-2xl shadow-black/20 p-5 lg:ml-auto">
                 {quickSuccess ? (
                   <div className="text-center py-4">
                     <div className="w-12 h-12 rounded-full bg-green-100 flex items-center justify-center mx-auto mb-3">
                       <CheckCircle2 className="w-6 h-6 text-green-600" />
                     </div>
                     <h4 className="text-[16px] font-bold text-[#061A2F] mb-1">Booking Confirmed!</h4>
-                    <p className="text-[13px] text-slate-500 mb-2">Ref: <span className="font-mono font-bold">{quickSuccess}</span></p>
-                    <button onClick={() => setQuickSuccess('')} className="text-[13px] text-[#00D4E8] font-semibold hover:underline">Book Another</button>
+                    <p className="text-[12px] text-slate-500 mb-2">Ref: <span className="font-mono font-bold">{quickSuccess}</span></p>
+                    <button onClick={() => setQuickSuccess('')} className="text-[12px] text-[#00D4E8] font-semibold hover:underline">Book Another</button>
                   </div>
                 ) : (
                   <form onSubmit={handleQuickBooking}>
-                    <h3 className="text-[16px] font-bold text-[#061A2F] mb-1">Quick Service Booking</h3>
-                    <p className="text-[11px] text-slate-500 mb-4">Fill in your details and we&apos;ll get back to you</p>
-                    <div className="space-y-3">
-                      <input
-                        type="text" required placeholder="Full Name" value={quickName} onChange={e => setQuickName(e.target.value)}
-                        className="w-full bg-slate-50 border border-slate-200 rounded-lg px-3.5 py-2.5 text-[13px] text-[#061A2F] placeholder-slate-400 focus:ring-2 focus:ring-[#00D4E8] focus:outline-none"
-                      />
-                      <input
-                        type="tel" required placeholder="Phone Number" value={quickPhone} onChange={e => setQuickPhone(e.target.value)}
-                        className="w-full bg-slate-50 border border-slate-200 rounded-lg px-3.5 py-2.5 text-[13px] text-[#061A2F] placeholder-slate-400 focus:ring-2 focus:ring-[#00D4E8] focus:outline-none"
-                      />
-                      <select
-                        required value={quickService} onChange={e => setQuickService(e.target.value)}
-                        className="w-full bg-slate-50 border border-slate-200 rounded-lg px-3.5 py-2.5 text-[13px] text-[#061A2F] focus:ring-2 focus:ring-[#00D4E8] focus:outline-none"
-                      >
+                    <h3 className="text-[15px] font-bold text-[#061A2F] mb-0.5">Quick Service Booking</h3>
+                    <p className="text-[10px] text-slate-400 mb-4">Fill in your details and we&apos;ll get back to you</p>
+                    <div className="space-y-2.5">
+                      <input type="text" required placeholder="Full Name" value={quickName} onChange={e => setQuickName(e.target.value)}
+                        className="w-full bg-slate-50 border border-slate-200 rounded-lg px-3 py-2.5 text-[12px] text-[#061A2F] placeholder-slate-400 focus:ring-2 focus:ring-[#00D4E8] focus:border-transparent focus:outline-none" />
+                      <input type="tel" required placeholder="Phone Number" value={quickPhone} onChange={e => setQuickPhone(e.target.value)}
+                        className="w-full bg-slate-50 border border-slate-200 rounded-lg px-3 py-2.5 text-[12px] text-[#061A2F] placeholder-slate-400 focus:ring-2 focus:ring-[#00D4E8] focus:border-transparent focus:outline-none" />
+                      <select required value={quickService} onChange={e => setQuickService(e.target.value)}
+                        className="w-full bg-slate-50 border border-slate-200 rounded-lg px-3 py-2.5 text-[12px] text-[#061A2F] focus:ring-2 focus:ring-[#00D4E8] focus:border-transparent focus:outline-none">
                         <option value="">Service Required</option>
                         {SERVICES.map(s => <option key={s.id} value={s.id}>{s.title}</option>)}
                       </select>
-                      <textarea
-                        placeholder="Your Message (Optional)" value={quickMessage} onChange={e => setQuickMessage(e.target.value)}
-                        rows={2}
-                        className="w-full bg-slate-50 border border-slate-200 rounded-lg px-3.5 py-2.5 text-[13px] text-[#061A2F] placeholder-slate-400 focus:ring-2 focus:ring-[#00D4E8] focus:outline-none resize-none"
-                      />
-                      <button
-                        type="submit" disabled={quickSubmitting}
-                        className="w-full py-3 bg-[#00D4E8] hover:bg-[#00bdd0] text-[#061A2F] font-bold text-[14px] rounded-lg flex items-center justify-center gap-2 transition-all disabled:opacity-50"
-                      >
-                        {quickSubmitting ? (
-                          <><Loader2 className="w-4 h-4 animate-spin" /> Booking...</>
-                        ) : (
-                          <>Book Now <ArrowRight className="w-4 h-4" /></>
-                        )}
+                      <textarea placeholder="Your Message (Optional)" value={quickMessage} onChange={e => setQuickMessage(e.target.value)}
+                        rows={2} className="w-full bg-slate-50 border border-slate-200 rounded-lg px-3 py-2.5 text-[12px] text-[#061A2F] placeholder-slate-400 focus:ring-2 focus:ring-[#00D4E8] focus:border-transparent focus:outline-none resize-none" />
+                      <button type="submit" disabled={quickSubmitting}
+                        className="w-full py-2.5 bg-[#00D4E8] hover:bg-[#00bdd0] text-[#061A2F] font-bold text-[13px] rounded-lg flex items-center justify-center gap-2 transition-all duration-300 hover:shadow-lg hover:shadow-cyan-400/20 disabled:opacity-50">
+                        {quickSubmitting ? <><Loader2 className="w-4 h-4 animate-spin" /> Booking...</> : <>Book Now <ArrowRight className="w-3.5 h-3.5" /></>}
                       </button>
                     </div>
-                    <p className="text-[10px] text-slate-400 mt-2 flex items-center gap-1">
-                      <CheckCircle2 className="w-3 h-3" /> We respect your privacy
+                    <p className="text-[9px] text-slate-400 mt-2 flex items-center gap-1">
+                      <CheckCircle2 className="w-3 h-3 text-slate-300" /> We respect your privacy
                     </p>
                   </form>
                 )}
+              </div>
+
+              {/* WhatsApp Card */}
+              <div className="hidden lg:flex items-center gap-2.5 mt-4 self-end bg-white rounded-xl px-4 py-2.5 shadow-lg">
+                <div className="w-10 h-10 bg-[#25D366] rounded-full flex items-center justify-center flex-shrink-0">
+                  <svg viewBox="0 0 24 24" className="w-5 h-5 fill-white" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
+                  </svg>
+                </div>
+                <a href={`https://wa.me/${COMPANY.whatsapp}?text=${encodeURIComponent('Hello Prime Cooling Solutions! I need AC service support.')}`}
+                  target="_blank" rel="noopener noreferrer" className="leading-tight">
+                  <div className="text-[12px] font-bold text-[#061A2F]">Chat on WhatsApp</div>
+                  <div className="text-[10px] text-slate-400">Quick Support</div>
+                </a>
               </div>
             </div>
           </div>
         </div>
 
-        {/* Bottom Statistics Bar */}
-        <div className="relative z-10 bg-[#061A2F]/90 border-t border-white/10" style={{ backdropFilter: 'blur(10px)' }}>
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5">
-            <div className="flex flex-wrap justify-between items-center gap-6">
+        {/* â”€â”€ Bottom Statistics Bar â”€â”€ */}
+        <div className="relative z-10 border-t border-white/10" style={{ background: 'rgba(4,18,36,0.88)', backdropFilter: 'blur(12px)' }}>
+          <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 py-4">
+            <div className="flex flex-wrap justify-center lg:justify-between items-center gap-8 lg:gap-4">
               {STATS.map((stat, i) => (
-                <div key={i} className="flex items-center gap-3">
-                  <span className="text-2xl">{stat.icon}</span>
+                <div key={i} className="flex items-center gap-3 group cursor-default">
+                  <span className="text-2xl group-hover:scale-125 transition-transform duration-300">{stat.icon}</span>
                   <div>
-                    <div className="text-[22px] font-extrabold text-white">{stat.value}</div>
-                    <div className="text-[12px] text-white/50">{stat.label}</div>
+                    <div className="text-[24px] font-black text-white group-hover:text-[#00D4E8] transition-colors duration-300">{stat.value}</div>
+                    <div className="text-[11px] text-white/45 font-medium">{stat.label}</div>
                   </div>
-                  {i < STATS.length - 1 && <div className="hidden lg:block w-px h-10 bg-white/10 ml-6" />}
+                  {i < STATS.length - 1 && <div className="hidden lg:block w-px h-10 bg-white/8 ml-8" />}
                 </div>
               ))}
             </div>
@@ -513,9 +500,9 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ═══════════════════════════════════════════════════════════
+      {/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
           Section 2: SERVICES OVERVIEW
-         ═══════════════════════════════════════════════════════════ */}
+         â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
       <section className="py-20 bg-slate-50 dark:bg-slate-950">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
@@ -547,9 +534,9 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ═══════════════════════════════════════════════════════════
+      {/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
           Section 3: WHY CHOOSE US
-         ═══════════════════════════════════════════════════════════ */}
+         â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
       <section className="py-20 bg-white dark:bg-slate-900 border-y border-slate-200 dark:border-slate-800">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
@@ -574,9 +561,9 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ═══════════════════════════════════════════════════════════
+      {/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
           Section 4: AMC HIGHLIGHT
-         ═══════════════════════════════════════════════════════════ */}
+         â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
       <section className="py-20 bg-slate-50 dark:bg-slate-950">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="bg-gradient-to-br from-brand-navy to-slate-800 rounded-2xl overflow-hidden shadow-xl border border-slate-700">
@@ -611,9 +598,9 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ═══════════════════════════════════════════════════════════
+      {/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
           Section 5: SERVICE METHODOLOGY
-         ═══════════════════════════════════════════════════════════ */}
+         â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
       <section className="py-20 bg-white dark:bg-slate-900 border-y border-slate-200 dark:border-slate-800 overflow-hidden">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
@@ -637,9 +624,9 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ═══════════════════════════════════════════════════════════
+      {/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
           Section 6: CLIENT SEGMENTS (Industries We Serve)
-         ═══════════════════════════════════════════════════════════ */}
+         â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
       <section className="py-20 bg-slate-50 dark:bg-slate-950">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
@@ -656,10 +643,10 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ═══════════════════════════════════════════════════════════
-          Section 7: BOOKING FORM — Full inline booking
+      {/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+          Section 7: BOOKING FORM â€” Full inline booking
           (Placed AFTER Services/Projects/Clients so customer trusts first)
-         ═══════════════════════════════════════════════════════════ */}
+         â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
       <section id="book-now" className="py-20 bg-white dark:bg-slate-900 border-y border-slate-200 dark:border-slate-800">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
@@ -673,7 +660,7 @@ export default function HomePage() {
           </div>
 
           {bookingSuccess && invoiceData ? (
-            /* ── INVOICE / CONFIRMATION ── */
+            /* â”€â”€ INVOICE / CONFIRMATION â”€â”€ */
             <div className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl shadow-lg overflow-hidden">
               {/* Invoice Header */}
               <div className="bg-gradient-to-r from-cyan-600 to-teal-600 px-6 py-5 text-white">
@@ -796,7 +783,7 @@ export default function HomePage() {
                         <div className="flex items-center gap-2 flex-1 min-w-0">
                           <span className="text-slate-700 dark:text-slate-300 truncate">{item.title}</span>
                           {Number(formData.units) > 1 && !item.isQuoteBased && (
-                            <span className="text-xs text-slate-500">×{formData.units}</span>
+                            <span className="text-xs text-slate-500">Ã—{formData.units}</span>
                           )}
                         </div>
                         <div className="flex items-center gap-2">
@@ -909,21 +896,21 @@ export default function HomePage() {
                 {submitting ? (
                   <><Loader2 className="w-5 h-5 animate-spin" aria-hidden="true" /> Submitting...</>
                 ) : (
-                  <><CalendarCheck className="w-5 h-5" aria-hidden="true" /> Confirm Booking{selectedServices.length > 0 && ` — Rs. ${fixedTotal.toLocaleString()}${hasQuoteBased ? ' + Quote' : ''}`}</>
+                  <><CalendarCheck className="w-5 h-5" aria-hidden="true" /> Confirm Booking{selectedServices.length > 0 && ` â€” Rs. ${fixedTotal.toLocaleString()}${hasQuoteBased ? ' + Quote' : ''}`}</>
                 )}
               </button>
 
               <p className="text-center text-xs text-slate-500 dark:text-slate-500">
-                By booking, you agree to be contacted via WhatsApp/Phone. Payment: Cash on Delivery. Working hours: Mon–Sat 9AM–7PM.
+                By booking, you agree to be contacted via WhatsApp/Phone. Payment: Cash on Delivery. Working hours: Monâ€“Sat 9AMâ€“7PM.
               </p>
             </form>
           )}
         </div>
       </section>
 
-      {/* ═══════════════════════════════════════════════════════════
+      {/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
           Section 8: CTA BANNER
-         ═══════════════════════════════════════════════════════════ */}
+         â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
       <section className="py-24 bg-brand-navy relative overflow-hidden">
         <div className="absolute inset-0 opacity-10 bg-[url('https://images.unsplash.com/photo-1581094794329-c8112a89af12?auto=format&fit=crop&q=80&w=2000')] bg-cover bg-center" />
         <div className="absolute inset-0 bg-gradient-to-b from-transparent to-brand-navy" />
