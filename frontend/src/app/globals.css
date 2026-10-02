@@ -69,3 +69,44 @@ body {
 .animate-float-reverse { animation: float-reverse 5s ease-in-out infinite; }
 .animate-glow-pulse { animation: glow-pulse 3s ease-in-out infinite; }
 .animate-spin-slow { animation: spin-slow 20s linear infinite; }
+
+/* ── Reference hero animations ── */
+@keyframes backgroundMove {
+  0% { transform: scale(1.015) translate3d(0, 0, 0); }
+  100% { transform: scale(1.045) translate3d(-8px, -4px, 0); }
+}
+
+@keyframes acFloat {
+  0%, 100% { transform: translateY(0) rotateY(0deg); }
+  50% { transform: translateY(-12px) rotateY(-2deg); }
+}
+
+@keyframes airFlow {
+  0%, 100% { transform: translateY(0) scaleY(0.8); opacity: 0.4; }
+  50% { transform: translateY(22px) scaleY(1.15); opacity: 1; }
+}
+
+@keyframes cardFloat {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+
+@keyframes badgeGlow {
+  0%, 100% { box-shadow: 0 0 0 rgba(0, 220, 255, 0); }
+  50% { box-shadow: 0 0 24px rgba(0, 220, 255, 0.3); }
+}
+
+@keyframes bookingFloat {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-5px); }
+}
+
+@keyframes stat-slide-up {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes acGlow {
+  0%, 100% { opacity: 0.6; transform: translateX(-50%) scaleX(1); }
+  50% { opacity: 1; transform: translateX(-50%) scaleX(1.08); }
+}

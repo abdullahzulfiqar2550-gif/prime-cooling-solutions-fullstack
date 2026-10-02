@@ -43,6 +43,9 @@ import {
   Eye,
   Trash2,
   Receipt,
+  Star,
+  MapPin,
+  ThumbsUp,
 } from 'lucide-react';
 import { COMPANY, SERVICES, WHY_CHOOSE_US, SERVICE_METHODOLOGY, CLIENT_SEGMENTS, AMC_DETAILS, AC_TYPES, TIME_SLOTS, REGIONS, PROPERTY_TYPES } from '@/lib/constants';
 import { supabase, generateBookingId } from '@/lib/supabase';
@@ -234,268 +237,319 @@ export default function HomePage() {
     }
   };
 
-  // â”€â”€ Promo config (easily toggled) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-  const PROMO = { enabled: true, discount: '30%', label: 'ON AMC PACKAGES', note: 'Limited Time Offer' };
-
   // â”€â”€ Stats (configurable business data) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   const STATS = [
-    { value: '500+', label: 'Happy Customers', icon: 'ðŸ˜Š' },
-    { value: '4.9/5', label: 'Customer Rating', icon: 'â­' },
-    { value: '5+ Years', label: 'Of Experience', icon: 'ðŸ†' },
-    { value: 'Lahore', label: 'Service Area', icon: 'ðŸ“' },
+    { value: '500+', label: 'Happy Customers', icon: <ThumbsUp className="w-5 h-5" /> },
+    { value: '4.9/5', label: 'Customer Rating', icon: <Star className="w-5 h-5" /> },
+    { value: '5+ Years', label: 'Of Experience', icon: <Award className="w-5 h-5" /> },
+    { value: 'Lahore', label: 'Service Area', icon: <MapPin className="w-5 h-5" /> },
   ];
+
+  // â”€â”€ Promo config â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  const PROMO = { enabled: true, discount: '30%', label: 'ON AMC PACKAGES', note: 'Limited Time Offer' };
 
   return (
     <div className="flex flex-col min-h-screen">
+
       {/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
-          HERO â€” Exact recreation of reference design
+          HERO SECTION â€” Matching reference design exactly
          â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
-      <section className="relative text-white overflow-hidden min-h-[92vh]">
-        {/* â”€â”€ Background: building scene with lighter gradient â”€â”€ */}
+      <section className="relative text-white overflow-hidden" style={{ minHeight: 'calc(100vh - 134px)' }}>
+
+        {/* â”€â”€ Background Image with subtle zoom animation â”€â”€ */}
         <div className="absolute inset-0 z-0">
           <Image
             src="/hero-bg.jpg"
-            alt="Prime Cooling Solutions â€“ commercial building, service van, HVAC technicians"
+            alt="Prime Cooling Solutions building with service van and HVAC technicians"
             fill
             className="object-cover object-center"
             priority
             quality={90}
+            sizes="100vw"
+            style={{ animation: 'backgroundMove 12s ease-in-out infinite alternate' }}
           />
-          {/* Gradient: strong left for text, transparent center so building/AC/van visible, slight darkening right for form contrast */}
+          {/* Light gradient: dark left for text, transparent center/right so building/board/van/plants clearly visible */}
           <div className="absolute inset-0" style={{
-            background: 'linear-gradient(95deg, rgba(4,18,36,0.93) 0%, rgba(4,18,36,0.82) 28%, rgba(4,18,36,0.25) 48%, rgba(4,18,36,0.08) 62%, rgba(4,18,36,0.35) 85%, rgba(4,18,36,0.55) 100%)',
+            background: 'linear-gradient(90deg, rgba(0,18,36,0.25) 0%, rgba(0,18,36,0) 30%, rgba(0,18,36,0) 70%, rgba(0,18,36,0.05) 100%)',
           }} />
         </div>
 
-        {/* â”€â”€ Hero Grid: 3 zones â”€â”€ */}
-        <div className="relative z-10 max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 h-full">
-          <div className="flex flex-col lg:flex-row min-h-[75vh] pt-8 pb-4 lg:pt-10 lg:pb-0">
+        {/* â”€â”€ Hero Content â”€â”€ */}
+        <div className="absolute left-0 top-0 w-full h-full z-[10]" style={{ padding: '0 4.5%' }}>
 
-            {/* â•â•â• ZONE 1: Left Content (text, features, CTAs) â•â•â• */}
-            <div className="lg:w-[42%] w-full flex flex-col justify-center z-10 pb-6 lg:pb-0">
+          {/* LEFT CONTENT â€” positioned top-left */}
+          <div className="absolute left-[4.5%] top-[6.5%] w-full max-w-[560px] z-[10]">
 
-              {/* Pill Badge */}
-              <div className="inline-flex items-center gap-2 px-5 py-2 rounded-full w-fit mb-5"
-                style={{ background: 'rgba(0,212,232,0.08)', border: '1px solid rgba(0,212,232,0.4)', backdropFilter: 'blur(8px)' }}>
-                <Snowflake className="w-4 h-4 text-[#00D4E8]" />
-                <span className="text-[13px] font-medium tracking-wide">
-                  <span className="text-[#00D4E8]">Your Comfort</span>
-                  <span className="text-white/30 mx-1.5">â€¢</span>
-                  <span className="text-white/80">Our Priority</span>
+            {/* Badge */}
+            <div className="inline-flex items-center gap-3 px-[22px] py-[10px] rounded-full mb-[22px] font-semibold text-[#00d9ff]"
+              style={{ border: '1px solid #00d9ff', background: 'rgba(0,23,43,0.4)', backdropFilter: 'blur(8px)', animation: 'badgeGlow 3s ease-in-out infinite' }}>
+              <Snowflake className="w-5 h-5" />
+              <span>Your Comfort</span>
+              <b className="text-white/70">â€¢</b>
+              <span>Our Priority</span>
+            </div>
+
+            {/* Heading */}
+            <h1 className="font-black leading-[0.98] tracking-tight mb-0" style={{ fontSize: 'clamp(2.8rem, 5vw, 4.8rem)', letterSpacing: '-3px', textShadow: '0 4px 20px rgba(0,0,0,0.25)' }}>
+              Professional AC<br />
+              Service &amp;<br />
+              <span className="text-[#00d8f3]" style={{ textShadow: '0 0 25px rgba(0,218,255,0.15)' }}>HVAC Solutions</span>
+            </h1>
+
+            {/* Description */}
+            <p className="mt-[22px] text-[16px] leading-[1.55] max-w-[555px] text-white/95" style={{ textShadow: '0 2px 8px rgba(0,0,0,0.5)' }}>
+              Stay cool, stay comfortable! We provide expert AC installation,
+              repair and maintenance for homes and businesses across Lahore.
+              Fast, reliable and affordable service â€” always.
+            </p>
+
+            {/* Service Features Row */}
+            <div className="flex flex-wrap lg:flex-nowrap mt-[25px]">
+              {[
+                { icon: <Snowflake className="w-[22px] h-[22px]" />, title: 'AC Installation', sub: '(All Brands)' },
+                { icon: <Wrench className="w-[22px] h-[22px]" />, title: 'AC Repair', sub: '(All Types)' },
+                { icon: <ShieldCheck className="w-[22px] h-[22px]" />, title: 'AMC Service', sub: '(Annual Maintenance)' },
+                { icon: <Building2 className="w-[22px] h-[22px]" />, title: 'Commercial &', sub: 'Residential' },
+              ].map((feat, i) => (
+                <div key={i} className={`flex flex-col gap-[7px] text-[13px] font-semibold min-w-[115px] pr-[22px] mr-[22px] ${i < 3 ? 'border-r border-white/65' : ''}`}>
+                  <div className="w-[47px] h-[47px] rounded-full flex items-center justify-center text-[#00d9ff]"
+                    style={{ border: '1px solid #00d9ff', background: 'rgba(0,30,55,0.55)', boxShadow: 'inset 0 0 15px rgba(0,210,255,0.12)' }}>
+                    {feat.icon}
+                  </div>
+                  <span className="text-white">{feat.title}</span>
+                  <small className="text-white/75 text-[11px] -mt-1">{feat.sub}</small>
+                </div>
+              ))}
+            </div>
+
+            {/* CTA Buttons */}
+            <div className="flex flex-wrap gap-[22px] mt-[27px]">
+              <button
+                onClick={scrollToBooking}
+                className="h-[58px] px-7 rounded-xl flex items-center gap-3.5 text-[16px] font-bold text-[#031e34] transition-all hover:-translate-y-1 hover:scale-[1.02]"
+                style={{ background: 'linear-gradient(135deg, #00d8f3, #05c7e6)', boxShadow: '0 12px 35px rgba(0,208,239,0.25)' }}
+              >
+                <CalendarCheck className="w-5 h-5" />
+                Book Service Now
+                <ArrowRight className="w-4 h-4" />
+              </button>
+              <a
+                href={`tel:${COMPANY.phone.replace(/-/g, '')}`}
+                className="h-[58px] px-7 rounded-xl flex items-center gap-3.5 text-[16px] font-bold text-white transition-all hover:-translate-y-1"
+                style={{ border: '1px solid #00d8f3', background: 'rgba(0,22,40,0.45)', backdropFilter: 'blur(8px)' }}
+              >
+                <Phone className="w-5 h-5 text-[#00d9ff]" />
+                Call Now
+              </a>
+            </div>
+
+            {/* Trust Points */}
+            <div className="flex flex-wrap gap-[25px] mt-[24px] text-[12px]">
+              {['Experienced Technicians', 'Genuine Parts', 'On-Time Service', 'Affordable Rates'].map((pt, i) => (
+                <span key={i} className="flex items-center gap-[7px]">
+                  <CheckCircle2 className="w-4 h-4 text-[#00d8f3]" /> {pt}
                 </span>
+              ))}
+            </div>
+          </div>
+
+
+          {/* 3D AC UNIT (desktop only) — real hero-ac.png asset */}
+          <div className="hidden lg:block absolute z-[6]"
+            style={{ right: '14%', top: '12%', width: '520px', animation: 'acFloat 5s ease-in-out infinite' }}>
+            {/* Atmospheric cyan glow behind/below the AC */}
+            <div className="absolute bottom-[-30px] left-1/2 -translate-x-1/2 w-[380px] h-[180px] pointer-events-none"
+              style={{
+                background: 'radial-gradient(ellipse at center, rgba(0,217,255,0.12) 0%, rgba(0,180,255,0.05) 40%, transparent 70%)',
+                filter: 'blur(25px)',
+                animation: 'acGlow 3s ease-in-out infinite',
+              }} />
+            {/* Realistic 3D AC Image */}
+            <Image
+              src="/hero-ac.png"
+              alt="Premium 3D split AC unit with cold air flow"
+              width={520}
+              height={360}
+              className="w-full h-auto relative z-[2]"
+              style={{
+                filter: 'drop-shadow(0 25px 50px rgba(0,0,0,0.35)) drop-shadow(0 8px 20px rgba(0,180,255,0.12))',
+              }}
+              priority
+            />
+          </div>
+
+          {/* â”€â”€ FLOATING CARDS â”€â”€ */}
+          {/* 22Â°C */}
+          <div className="hidden lg:flex absolute z-[15] items-center gap-3 px-5 py-3 rounded-[35px]"
+            style={{ right: '34%', top: '20%', background: 'rgba(4,31,54,0.65)', border: '1px solid rgba(0,219,255,0.8)', backdropFilter: 'blur(12px)', boxShadow: '0 12px 30px rgba(0,0,0,0.25)', animation: 'cardFloat 4s ease-in-out infinite' }}>
+            <div className="w-[45px] h-[45px] rounded-full flex items-center justify-center text-[#00d9ff]">
+              <Snowflake className="w-[22px] h-[22px]" />
+            </div>
+            <div>
+              <strong className="text-[17px] block">22Â°C</strong>
+              <small className="text-white/75 text-[11px] block mt-0.5">Perfect Cooling</small>
+            </div>
+          </div>
+
+          {/* AMC */}
+          <div className="hidden lg:flex absolute z-[15] items-center gap-3 px-5 py-3 rounded-[35px]"
+            style={{ right: '19%', top: '20%', background: 'rgba(4,31,54,0.65)', border: '1px solid rgba(0,219,255,0.8)', backdropFilter: 'blur(12px)', boxShadow: '0 12px 30px rgba(0,0,0,0.25)', animation: 'cardFloat 4s ease-in-out infinite 1s' }}>
+            <div className="w-[45px] h-[45px] rounded-full flex items-center justify-center text-[#00d9ff]">
+              <Shield className="w-[22px] h-[22px]" />
+            </div>
+            <div>
+              <strong className="text-[17px] block">AMC Available</strong>
+              <small className="text-white/75 text-[11px] block mt-0.5">Stay Worry Free</small>
+            </div>
+          </div>
+
+          {/* Fast Response */}
+          <div className="hidden lg:flex absolute z-[15] items-center gap-3 px-5 py-3 rounded-[35px]"
+            style={{ right: '19%', top: '62%', background: 'rgba(4,31,54,0.65)', border: '1px solid rgba(0,219,255,0.8)', backdropFilter: 'blur(12px)', boxShadow: '0 12px 30px rgba(0,0,0,0.25)', animation: 'cardFloat 4s ease-in-out infinite 2s' }}>
+            <div className="w-[45px] h-[45px] rounded-full flex items-center justify-center text-[#00d9ff]">
+              <Zap className="w-[22px] h-[22px]" />
+            </div>
+            <div>
+              <strong className="text-[17px] block">Fast Response</strong>
+              <small className="text-white/75 text-[11px] block mt-0.5">Within 24 Hours</small>
+            </div>
+          </div>
+
+          {/* Decorative text */}
+          <div className="hidden lg:block absolute z-[5] pointer-events-none select-none" style={{ right: '28%', top: '55%' }}>
+            <p className="text-white/20 text-[28px] leading-tight italic" style={{ fontFamily: "'Georgia', serif" }}>
+              Cooler Spaces<br />Better Lives
+            </p>
+          </div>
+
+          {/* â”€â”€ OFFER BADGE â”€â”€ */}
+          {PROMO.enabled && (
+            <div className="hidden lg:flex absolute z-[15] items-center" style={{ right: '3%', top: '7%' }}>
+              <div className="text-white text-center px-5 py-2.5"
+                style={{ background: 'linear-gradient(135deg, #05dff3, #00a9d0)', clipPath: 'polygon(8% 0, 100% 0, 92% 100%, 0 100%)' }}>
+                <span className="block text-[10px] uppercase font-bold">UP TO</span>
+                <strong className="text-[28px] leading-none">{PROMO.discount}</strong>
+                <span className="text-[10px] align-top font-bold ml-0.5">OFF</span>
               </div>
-
-              {/* MAIN HEADLINE â€” BIG & BOLD */}
-              <h1 className="text-[48px] sm:text-[56px] md:text-[64px] lg:text-[72px] xl:text-[80px] font-black leading-[0.95] tracking-tight mb-5">
-                Professional AC<br />
-                Service &amp;<br />
-                <span className="text-[#00D4E8]">HVAC Solutions</span>
-              </h1>
-
-              {/* Supporting paragraph */}
-              <p className="text-[14px] md:text-[15px] text-white/65 mb-7 max-w-[440px] leading-relaxed">
-                Stay cool, stay comfortable! We provide expert AC installation,
-                repair and maintenance for homes and businesses across Lahore.
-                Fast, reliable and affordable service â€” always.
-              </p>
-
-              {/* â”€â”€ Service Features: SINGLE ROW with separators â”€â”€ */}
-              <div className="flex items-center gap-0 mb-7 overflow-x-auto">
-                {[
-                  { icon: <Hammer className="w-4 h-4" />, title: 'AC Installation', sub: '(All Brands)' },
-                  { icon: <Wrench className="w-4 h-4" />, title: 'AC Repair', sub: '(All Types)' },
-                  { icon: <ShieldCheck className="w-4 h-4" />, title: 'AMC Service', sub: '(Annual Maintenance)' },
-                  { icon: <Building2 className="w-4 h-4" />, title: 'Commercial &', sub: 'Residential' },
-                ].map((feat, i) => (
-                  <div key={i} className="flex items-center">
-                    <div className="flex items-center gap-2 px-3 flex-shrink-0">
-                      <div className="w-9 h-9 rounded-full border border-[#00D4E8]/40 bg-[#00D4E8]/10 flex items-center justify-center text-[#00D4E8] flex-shrink-0">
-                        {feat.icon}
-                      </div>
-                      <div className="min-w-0">
-                        <div className="text-[11px] font-bold text-white whitespace-nowrap">{feat.title}</div>
-                        <div className="text-[9px] text-white/40 whitespace-nowrap">{feat.sub}</div>
-                      </div>
-                    </div>
-                    {i < 3 && <div className="w-px h-7 bg-white/15 flex-shrink-0" />}
-                  </div>
-                ))}
-              </div>
-
-              {/* â”€â”€ CTA Buttons â”€â”€ */}
-              <div className="flex flex-wrap gap-3 mb-5">
-                <button
-                  onClick={scrollToBooking}
-                  className="group px-6 py-3 rounded-lg font-bold text-[14px] text-[#061A2F] flex items-center gap-2 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-cyan-400/30"
-                  style={{ background: 'linear-gradient(135deg, #00D4E8, #00C4D6)' }}
-                >
-                  <CalendarCheck className="w-4 h-4" /> Book Service Now
-                  <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
-                </button>
-                <a
-                  href={`tel:${COMPANY.phone.replace(/-/g, '')}`}
-                  className="px-6 py-3 rounded-lg font-semibold text-[14px] text-white flex items-center gap-2 transition-all duration-300 hover:-translate-y-1"
-                  style={{ background: 'rgba(6,26,47,0.5)', border: '1px solid rgba(0,212,232,0.4)', backdropFilter: 'blur(8px)' }}
-                >
-                  <Phone className="w-4 h-4 text-[#00D4E8]" /> Call Now
-                </a>
-              </div>
-
-              {/* Trust Points â€” single row */}
-              <div className="flex flex-wrap gap-4 text-[11px] text-white/50">
-                {['Experienced Technicians', 'Genuine Parts', 'On-Time Service', 'Affordable Rates'].map((pt, i) => (
-                  <span key={i} className="flex items-center gap-1">
-                    <CheckCircle2 className="w-3.5 h-3.5 text-[#00D4E8]/70" /> {pt}
-                  </span>
-                ))}
+              <div className="flex flex-col px-7 py-3.5" style={{ background: 'rgba(2,28,49,0.9)', border: '1px solid rgba(0,214,243,0.35)' }}>
+                <strong className="text-[14px]">{PROMO.label}</strong>
+                <small className="text-[#00d9ff] mt-1">{PROMO.note}</small>
               </div>
             </div>
+          )}
 
-            {/* â•â•â• ZONE 2: Center â€” scene shows through, floating cards only â•â•â• */}
-            <div className="hidden lg:flex lg:w-[33%] relative items-end justify-center pb-16">
+          {/* â”€â”€ BOOKING CARD (desktop) â”€â”€ */}
+          <div className="hidden lg:block absolute z-[30]"
+            style={{ right: '3%', top: '27%', width: '255px', animation: 'bookingFloat 5s ease-in-out infinite' }}>
+            <div className="p-[17px] rounded-[17px] text-[#102c50]"
+              style={{ background: 'rgba(255,255,255,0.97)', boxShadow: '0 25px 60px rgba(0,0,0,0.35)' }}>
 
-              {/* Floating Card: 22Â°C */}
-              <div className="absolute top-[22%] left-[8%] animate-float-slow z-10" style={{ animationDuration: '5s' }}>
-                <div className="flex items-center gap-2.5 px-3.5 py-2.5 rounded-xl shadow-lg"
-                  style={{ background: 'rgba(4,18,36,0.80)', border: '1px solid rgba(0,212,232,0.35)', backdropFilter: 'blur(14px)' }}>
-                  <div className="w-8 h-8 rounded-full bg-[#00D4E8]/15 flex items-center justify-center">
-                    <Snowflake className="w-4 h-4 text-[#00D4E8]" />
+              {quickSuccess ? (
+                <div className="text-center py-4">
+                  <div className="w-12 h-12 rounded-full bg-green-100 flex items-center justify-center mx-auto mb-3">
+                    <CheckCircle2 className="w-6 h-6 text-green-600" />
                   </div>
-                  <div>
-                    <div className="text-[20px] font-extrabold text-white leading-none">22Â°C</div>
-                    <div className="text-[9px] text-white/50 font-medium">Perfect Cooling</div>
-                  </div>
+                  <strong className="text-[14px] block text-[#102c50]">Booking Confirmed!</strong>
+                  <p className="text-[11px] text-slate-500 mt-1">Ref: <span className="font-mono font-bold">{quickSuccess}</span></p>
+                  <button onClick={() => setQuickSuccess('')} className="text-[11px] text-[#00d9ff] font-semibold mt-2 hover:underline">Book Another</button>
                 </div>
-              </div>
-
-              {/* Floating Card: AMC */}
-              <div className="absolute top-[18%] right-[-5%] animate-float z-10" style={{ animationDuration: '5.5s', animationDelay: '0.8s' }}>
-                <div className="flex items-center gap-2.5 px-3.5 py-2.5 rounded-xl shadow-lg"
-                  style={{ background: 'rgba(4,18,36,0.80)', border: '1px solid rgba(0,212,232,0.35)', backdropFilter: 'blur(14px)' }}>
-                  <div className="w-8 h-8 rounded-full bg-[#00D4E8]/15 flex items-center justify-center">
-                    <Shield className="w-4 h-4 text-[#00D4E8]" />
-                  </div>
-                  <div>
-                    <div className="text-[13px] font-bold text-white">AMC Available</div>
-                    <div className="text-[9px] text-white/50">Stay Worry Free</div>
-                  </div>
-                </div>
-              </div>
-
-              {/* Floating Card: Fast Response */}
-              <div className="absolute bottom-[30%] right-[-10%] animate-float-reverse z-10" style={{ animationDuration: '4.5s', animationDelay: '0.3s' }}>
-                <div className="flex items-center gap-2.5 px-3.5 py-2.5 rounded-xl shadow-lg"
-                  style={{ background: 'rgba(4,18,36,0.80)', border: '1px solid rgba(0,212,232,0.35)', backdropFilter: 'blur(14px)' }}>
-                  <div className="w-8 h-8 rounded-full bg-[#00D4E8]/15 flex items-center justify-center">
-                    <Zap className="w-4 h-4 text-[#00D4E8]" />
-                  </div>
-                  <div>
-                    <div className="text-[13px] font-bold text-white">Fast Response</div>
-                    <div className="text-[9px] text-white/50">Within 24 Hours</div>
-                  </div>
-                </div>
-              </div>
-
-              {/* Decorative handwritten text */}
-              <div className="absolute bottom-[12%] left-[15%] z-10 pointer-events-none select-none">
-                <p className="text-white/15 text-[26px] leading-tight italic" style={{ fontFamily: "'Georgia', serif" }}>
-                  &ldquo;Cooler Spaces<br />Better Lives&rdquo;
-                </p>
-              </div>
-            </div>
-
-            {/* â•â•â• ZONE 3: Right â€” Promo Badge + Quick Booking Form â•â•â• */}
-            <div className="lg:w-[25%] w-full flex flex-col items-end justify-start pt-0 lg:pt-4 z-20">
-
-              {/* Promo Badge */}
-              {PROMO.enabled && (
-                <div className="hidden md:block mb-4 self-end">
-                  <div className="flex gap-0">
-                    <div className="bg-[#00D4E8] text-[#061A2F] px-4 py-3 rounded-l-xl text-center">
-                      <div className="text-[9px] font-bold uppercase tracking-widest">UP TO</div>
-                      <div className="text-[34px] font-black leading-none -mt-0.5">
-                        {PROMO.discount}<span className="text-[14px] align-top font-extrabold">OFF</span>
-                      </div>
-                    </div>
-                    <div className="bg-[#061A2F] text-white px-3 py-3 rounded-r-xl border border-l-0 border-white/10 flex flex-col justify-center">
-                      <div className="text-[9px] font-bold uppercase tracking-wider">{PROMO.label}</div>
-                      <div className="text-[8px] text-white/50 italic mt-0.5">{PROMO.note}</div>
+              ) : (
+                <form onSubmit={handleQuickBooking}>
+                  <div className="flex items-start gap-2.5 mb-3.5">
+                    <CalendarCheck className="w-5 h-5 text-[#00a9d5] mt-0.5 flex-shrink-0" />
+                    <div>
+                      <strong className="text-[14px] block">Quick Service Booking</strong>
+                      <small className="text-[9px] text-[#75869a] leading-snug block mt-0.5">Fill in your details and we&apos;ll get back to you</small>
                     </div>
                   </div>
-                </div>
+
+                  <div className="h-[35px] border border-[#d7e2ec] rounded-[7px] flex items-center px-2.5 mb-[9px] bg-white">
+                    <Eye className="w-3 h-3 text-[#2b81ae] mr-2 flex-shrink-0" />
+                    <input type="text" required placeholder="Full Name" value={quickName} onChange={e => setQuickName(e.target.value)}
+                      className="w-full border-none outline-none text-[10px] text-[#4c6780] bg-transparent" />
+                  </div>
+                  <div className="h-[35px] border border-[#d7e2ec] rounded-[7px] flex items-center px-2.5 mb-[9px] bg-white">
+                    <Phone className="w-3 h-3 text-[#2b81ae] mr-2 flex-shrink-0" />
+                    <input type="tel" required placeholder="Phone Number" value={quickPhone} onChange={e => setQuickPhone(e.target.value)}
+                      className="w-full border-none outline-none text-[10px] text-[#4c6780] bg-transparent" />
+                  </div>
+                  <div className="h-[35px] border border-[#d7e2ec] rounded-[7px] flex items-center px-2.5 mb-[9px] bg-white">
+                    <ShieldCheck className="w-3 h-3 text-[#2b81ae] mr-2 flex-shrink-0" />
+                    <select required value={quickService} onChange={e => setQuickService(e.target.value)}
+                      className="w-full border-none outline-none text-[10px] text-[#4c6780] bg-transparent">
+                      <option value="">Service Required</option>
+                      {SERVICES.map(s => <option key={s.id} value={s.id}>{s.title}</option>)}
+                    </select>
+                  </div>
+                  <div className="h-[58px] border border-[#d7e2ec] rounded-[7px] flex items-start px-2.5 pt-2 mb-[9px] bg-white">
+                    <MessageSquare className="w-3 h-3 text-[#2b81ae] mt-0.5 mr-2 flex-shrink-0" />
+                    <textarea placeholder="Your Message (Optional)" value={quickMessage} onChange={e => setQuickMessage(e.target.value)}
+                      rows={2} className="w-full border-none outline-none text-[10px] text-[#4c6780] bg-transparent resize-none h-[45px]" />
+                  </div>
+
+                  <button type="submit" disabled={quickSubmitting}
+                    className="w-full h-[40px] rounded-lg flex items-center justify-center gap-2.5 font-extrabold text-[#05243a] text-[12px] transition-all hover:-translate-y-0.5 disabled:opacity-50"
+                    style={{ background: 'linear-gradient(135deg, #00dff2, #00bddb)' }}>
+                    {quickSubmitting ? <><Loader2 className="w-3.5 h-3.5 animate-spin" /> Booking...</> : <>Book Now <ArrowRight className="w-3.5 h-3.5" /></>}
+                  </button>
+
+                  <p className="text-center mt-2 text-[#506a7d] text-[8px] flex items-center justify-center gap-1">
+                    <Shield className="w-2.5 h-2.5 text-[#0a638e]" /> We respect your privacy
+                  </p>
+                </form>
               )}
-
-              {/* Quick Service Booking Card */}
-              <div className="w-full max-w-[300px] bg-white rounded-2xl shadow-2xl shadow-black/20 p-5 lg:ml-auto">
-                {quickSuccess ? (
-                  <div className="text-center py-4">
-                    <div className="w-12 h-12 rounded-full bg-green-100 flex items-center justify-center mx-auto mb-3">
-                      <CheckCircle2 className="w-6 h-6 text-green-600" />
-                    </div>
-                    <h4 className="text-[16px] font-bold text-[#061A2F] mb-1">Booking Confirmed!</h4>
-                    <p className="text-[12px] text-slate-500 mb-2">Ref: <span className="font-mono font-bold">{quickSuccess}</span></p>
-                    <button onClick={() => setQuickSuccess('')} className="text-[12px] text-[#00D4E8] font-semibold hover:underline">Book Another</button>
-                  </div>
-                ) : (
-                  <form onSubmit={handleQuickBooking}>
-                    <h3 className="text-[15px] font-bold text-[#061A2F] mb-0.5">Quick Service Booking</h3>
-                    <p className="text-[10px] text-slate-400 mb-4">Fill in your details and we&apos;ll get back to you</p>
-                    <div className="space-y-2.5">
-                      <input type="text" required placeholder="Full Name" value={quickName} onChange={e => setQuickName(e.target.value)}
-                        className="w-full bg-slate-50 border border-slate-200 rounded-lg px-3 py-2.5 text-[12px] text-[#061A2F] placeholder-slate-400 focus:ring-2 focus:ring-[#00D4E8] focus:border-transparent focus:outline-none" />
-                      <input type="tel" required placeholder="Phone Number" value={quickPhone} onChange={e => setQuickPhone(e.target.value)}
-                        className="w-full bg-slate-50 border border-slate-200 rounded-lg px-3 py-2.5 text-[12px] text-[#061A2F] placeholder-slate-400 focus:ring-2 focus:ring-[#00D4E8] focus:border-transparent focus:outline-none" />
-                      <select required value={quickService} onChange={e => setQuickService(e.target.value)}
-                        className="w-full bg-slate-50 border border-slate-200 rounded-lg px-3 py-2.5 text-[12px] text-[#061A2F] focus:ring-2 focus:ring-[#00D4E8] focus:border-transparent focus:outline-none">
-                        <option value="">Service Required</option>
-                        {SERVICES.map(s => <option key={s.id} value={s.id}>{s.title}</option>)}
-                      </select>
-                      <textarea placeholder="Your Message (Optional)" value={quickMessage} onChange={e => setQuickMessage(e.target.value)}
-                        rows={2} className="w-full bg-slate-50 border border-slate-200 rounded-lg px-3 py-2.5 text-[12px] text-[#061A2F] placeholder-slate-400 focus:ring-2 focus:ring-[#00D4E8] focus:border-transparent focus:outline-none resize-none" />
-                      <button type="submit" disabled={quickSubmitting}
-                        className="w-full py-2.5 bg-[#00D4E8] hover:bg-[#00bdd0] text-[#061A2F] font-bold text-[13px] rounded-lg flex items-center justify-center gap-2 transition-all duration-300 hover:shadow-lg hover:shadow-cyan-400/20 disabled:opacity-50">
-                        {quickSubmitting ? <><Loader2 className="w-4 h-4 animate-spin" /> Booking...</> : <>Book Now <ArrowRight className="w-3.5 h-3.5" /></>}
-                      </button>
-                    </div>
-                    <p className="text-[9px] text-slate-400 mt-2 flex items-center gap-1">
-                      <CheckCircle2 className="w-3 h-3 text-slate-300" /> We respect your privacy
-                    </p>
-                  </form>
-                )}
-              </div>
-
-              {/* WhatsApp Card */}
-              <div className="hidden lg:flex items-center gap-2.5 mt-4 self-end bg-white rounded-xl px-4 py-2.5 shadow-lg">
-                <div className="w-10 h-10 bg-[#25D366] rounded-full flex items-center justify-center flex-shrink-0">
-                  <svg viewBox="0 0 24 24" className="w-5 h-5 fill-white" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
-                  </svg>
-                </div>
-                <a href={`https://wa.me/${COMPANY.whatsapp}?text=${encodeURIComponent('Hello Prime Cooling Solutions! I need AC service support.')}`}
-                  target="_blank" rel="noopener noreferrer" className="leading-tight">
-                  <div className="text-[12px] font-bold text-[#061A2F]">Chat on WhatsApp</div>
-                  <div className="text-[10px] text-slate-400">Quick Support</div>
-                </a>
-              </div>
             </div>
           </div>
         </div>
 
-        {/* â”€â”€ Bottom Statistics Bar â”€â”€ */}
-        <div className="relative z-10 border-t border-white/10" style={{ background: 'rgba(4,18,36,0.88)', backdropFilter: 'blur(12px)' }}>
-          <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 py-4">
-            <div className="flex flex-wrap justify-center lg:justify-between items-center gap-8 lg:gap-4">
-              {STATS.map((stat, i) => (
-                <div key={i} className="flex items-center gap-3 group cursor-default">
-                  <span className="text-2xl group-hover:scale-125 transition-transform duration-300">{stat.icon}</span>
-                  <div>
-                    <div className="text-[24px] font-black text-white group-hover:text-[#00D4E8] transition-colors duration-300">{stat.value}</div>
-                    <div className="text-[11px] text-white/45 font-medium">{stat.label}</div>
-                  </div>
-                  {i < STATS.length - 1 && <div className="hidden lg:block w-px h-10 bg-white/8 ml-8" />}
-                </div>
-              ))}
+        {/* â”€â”€ Stats Bar â”€â”€ */}
+        <div className="absolute bottom-0 left-0 right-0 z-[20] flex flex-wrap items-center justify-center"
+          style={{ minHeight: '88px', background: 'rgba(2,25,45,0.92)', borderTop: '1px solid rgba(0,216,244,0.35)', backdropFilter: 'blur(8px)' }}>
+          {STATS.map((stat, i) => (
+            <div key={i} className={`h-[58px] px-4 lg:px-[35px] flex items-center gap-4 group cursor-default ${i < STATS.length - 1 ? 'border-r border-white/[0.28]' : ''}`}
+              style={{ animation: `stat-slide-up 0.6s ease-out ${0.1 + i * 0.15}s both` }}>
+              <div className="w-12 h-12 rounded-full border border-[#00d8f3] flex items-center justify-center text-[#00d8f3] group-hover:bg-[#00d8f3]/10 transition-all duration-300">
+                {stat.icon}
+              </div>
+              <div>
+                <strong className="text-[19px] block group-hover:text-[#00d8f3] transition-colors duration-300">{stat.value}</strong>
+                <span className="text-white/75 text-[12px] block mt-0.5">{stat.label}</span>
+              </div>
             </div>
+          ))}
+        </div>
+
+        {/* Mobile Booking Form */}
+        <div className="lg:hidden relative z-10 px-5 pt-[420px] pb-6">
+          <div className="bg-white rounded-2xl p-5 shadow-2xl text-[#102c50] max-w-sm mx-auto">
+            {quickSuccess ? (
+              <div className="text-center py-4">
+                <CheckCircle2 className="w-10 h-10 text-green-600 mx-auto mb-2" />
+                <strong className="block text-[#102c50]">Booking Confirmed!</strong>
+                <p className="text-sm text-slate-500">Ref: {quickSuccess}</p>
+                <button onClick={() => setQuickSuccess('')} className="text-[#00d9ff] text-sm font-bold mt-2">Book Another</button>
+              </div>
+            ) : (
+              <form onSubmit={handleQuickBooking} className="space-y-3">
+                <h3 className="font-bold text-[16px]">Quick Service Booking</h3>
+                <input type="text" required placeholder="Full Name" value={quickName} onChange={e => setQuickName(e.target.value)}
+                  className="w-full border border-slate-200 rounded-lg px-3 py-3 text-sm bg-white text-[#102c50] outline-none focus:ring-2 focus:ring-[#00d9ff]" />
+                <input type="tel" required placeholder="Phone Number" value={quickPhone} onChange={e => setQuickPhone(e.target.value)}
+                  className="w-full border border-slate-200 rounded-lg px-3 py-3 text-sm bg-white text-[#102c50] outline-none focus:ring-2 focus:ring-[#00d9ff]" />
+                <select required value={quickService} onChange={e => setQuickService(e.target.value)}
+                  className="w-full border border-slate-200 rounded-lg px-3 py-3 text-sm bg-white text-[#102c50] outline-none focus:ring-2 focus:ring-[#00d9ff]">
+                  <option value="">Service Required</option>
+                  {SERVICES.map(s => <option key={s.id} value={s.id}>{s.title}</option>)}
+                </select>
+                <textarea placeholder="Your Message (Optional)" value={quickMessage} onChange={e => setQuickMessage(e.target.value)}
+                  rows={2} className="w-full border border-slate-200 rounded-lg px-3 py-3 text-sm bg-white text-[#102c50] outline-none focus:ring-2 focus:ring-[#00d9ff] resize-none" />
+                <button type="submit" disabled={quickSubmitting}
+                  className="w-full py-3 rounded-lg font-bold text-[#05243a] flex items-center justify-center gap-2 disabled:opacity-50"
+                  style={{ background: 'linear-gradient(135deg, #00dff2, #00bddb)' }}>
+                  {quickSubmitting ? <><Loader2 className="w-4 h-4 animate-spin" /> Booking...</> : <>Book Now <ArrowRight className="w-4 h-4" /></>}
+                </button>
+              </form>
+            )}
           </div>
         </div>
       </section>

@@ -19,99 +19,104 @@ export function Header() {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <header className="sticky top-0 z-40 w-full bg-white shadow-sm">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-[68px]">
-          {/* Logo */}
-          <div className="flex-shrink-0">
-            <Link href="/" className="flex items-center gap-2.5">
-              <Image src="/logo.png" alt="Prime Cooling Solutions" width={42} height={42} className="rounded-md" priority />
-              <div className="leading-tight">
-                <span className="font-extrabold text-[17px] text-[#061A2F] tracking-tight block">PRIME COOLING</span>
-                <span className="font-bold text-[10px] text-[#00D4E8] tracking-[0.2em] block">SOLUTIONS</span>
-              </div>
-            </Link>
+    <header className="w-full bg-white relative z-[100]" style={{ height: '85px' }}>
+      <div className="h-full flex items-center justify-between px-[4.5%]">
+
+        {/* Logo */}
+        <Link href="/" className="flex items-center gap-3 flex-shrink-0">
+          <div className="relative w-[55px] h-[55px] rounded-full border-[5px] border-[#078dc8] flex items-center justify-center">
+            <Image src="/logo.png" alt="Prime Cooling Solutions" width={38} height={38} className="rounded-full" priority />
+            <div className="absolute -bottom-0.5 -right-0.5 w-4 h-4 bg-[#00d9ff] rounded-full" />
           </div>
+          <div className="leading-none">
+            <h2 className="text-[#102c50] text-[25px] font-black tracking-tight" style={{ letterSpacing: '-0.8px' }}>
+              PRIME COOLING
+            </h2>
+            <span className="text-[#00bce8] text-[17px] font-extrabold" style={{ letterSpacing: '2px' }}>
+              SOLUTIONS
+            </span>
+          </div>
+        </Link>
 
-          {/* Desktop Nav */}
-          <nav className="hidden lg:flex items-center gap-7">
-            {NAV_LINKS.map((item) => (
-              <Link
-                key={item.label}
-                href={item.href}
-                className={`text-[14px] font-medium transition-colors relative pb-1 flex items-center gap-1 ${
-                  item.active
-                    ? 'text-[#00D4E8] border-b-2 border-[#00D4E8]'
-                    : 'text-[#061A2F]/70 hover:text-[#00D4E8]'
-                }`}
-              >
-                {item.label}
-                {item.hasDropdown && <ChevronDown className="w-3.5 h-3.5" />}
-              </Link>
-            ))}
-          </nav>
-
-          {/* Desktop Right */}
-          <div className="hidden lg:flex items-center gap-4">
-            <a
-              href={`tel:${COMPANY.phone.replace(/-/g, '')}`}
-              className="flex items-center gap-2 text-[14px] font-semibold text-[#061A2F] hover:text-[#00D4E8] transition-colors"
-            >
-              <Phone className="w-4 h-4 text-[#00D4E8]" />
-              {COMPANY.phone}
-            </a>
+        {/* Desktop Navigation */}
+        <nav className="hidden lg:flex items-center h-full" style={{ gap: '38px' }}>
+          {NAV_LINKS.map((item) => (
             <Link
-              href="/book"
-              className="inline-flex items-center gap-2 px-5 py-2.5 bg-[#00D4E8] hover:bg-[#00bdd0] text-[#061A2F] font-bold text-[14px] rounded-lg transition-all hover:-translate-y-0.5 hover:shadow-lg hover:shadow-cyan-500/20"
+              key={item.label}
+              href={item.href}
+              className={`h-full flex items-center text-[16px] font-medium relative transition-colors ${
+                item.active
+                  ? 'text-[#00aee0] font-bold'
+                  : 'text-[#102849] hover:text-[#00aee0]'
+              }`}
             >
-              <CalendarCheck className="w-4 h-4" />
-              Book Online
+              {item.label}
+              {item.hasDropdown && <ChevronDown className="w-2.5 h-2.5 ml-2" />}
+              {item.active && (
+                <span className="absolute bottom-[17px] left-0 w-full h-[3px] bg-[#00d5f5]" />
+              )}
             </Link>
-          </div>
+          ))}
+        </nav>
 
-          {/* Mobile Toggle */}
-          <div className="flex lg:hidden items-center gap-2">
-            <a href={`tel:${COMPANY.phone.replace(/-/g, '')}`} className="p-2 text-[#00D4E8]" aria-label="Call us">
-              <Phone className="w-5 h-5" />
-            </a>
-            <button
-              type="button"
-              onClick={() => setIsOpen(!isOpen)}
-              className="p-2 rounded-md text-[#061A2F] hover:bg-slate-100"
-              aria-expanded={isOpen}
-              aria-label="Toggle menu"
-            >
-              {isOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
-            </button>
-          </div>
+        {/* Desktop Right Actions */}
+        <div className="hidden lg:flex items-center" style={{ gap: '28px' }}>
+          <a
+            href={`tel:${COMPANY.phone.replace(/-/g, '')}`}
+            className="flex items-center gap-3 text-[#112945]"
+          >
+            <Phone className="w-[19px] h-[19px] text-[#087ab5]" />
+            <span className="font-semibold">{COMPANY.phone}</span>
+          </a>
+          <Link
+            href="/book"
+            className="flex items-center gap-3 px-6 py-3.5 rounded-[11px] font-bold text-[#06233d] transition-all hover:-translate-y-[3px]"
+            style={{
+              background: 'linear-gradient(135deg, #08d9f0, #00bddf)',
+              boxShadow: '0 8px 25px rgba(0, 207, 240, 0.22)',
+            }}
+          >
+            <CalendarCheck className="w-[18px] h-[18px]" />
+            Book Online
+          </Link>
+        </div>
+
+        {/* Mobile Toggle */}
+        <div className="flex lg:hidden items-center gap-2">
+          <a href={`tel:${COMPANY.phone.replace(/-/g, '')}`} className="p-2 text-[#00D4E8]" aria-label="Call us">
+            <Phone className="w-5 h-5" />
+          </a>
+          <Link href="/book" className="px-3 py-2 bg-[#00D4E8] text-[#061A2F] text-xs font-bold rounded-lg">
+            Book Online
+          </Link>
+          <button
+            type="button"
+            onClick={() => setIsOpen(!isOpen)}
+            className="p-2 rounded-md text-[#061A2F] hover:bg-slate-100"
+            aria-expanded={isOpen}
+            aria-label="Toggle menu"
+          >
+            {isOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+          </button>
         </div>
       </div>
 
       {/* Mobile Menu */}
       {isOpen && (
-        <div className="lg:hidden bg-white border-t border-slate-100 shadow-lg">
+        <div className="lg:hidden bg-white border-t border-slate-100 shadow-xl absolute w-full left-0">
           <div className="px-4 pt-3 pb-4 space-y-1">
             {NAV_LINKS.map((item) => (
               <Link
                 key={item.label}
                 href={item.href}
-                className={`block px-3 py-2.5 rounded-lg text-[15px] font-medium transition-colors ${
-                  item.active
-                    ? 'text-[#00D4E8] bg-cyan-50'
-                    : 'text-[#061A2F] hover:bg-slate-50'
+                className={`block px-3 py-2.5 rounded-lg text-[15px] font-medium ${
+                  item.active ? 'text-[#00D4E8] bg-cyan-50' : 'text-[#061A2F] hover:bg-slate-50'
                 }`}
                 onClick={() => setIsOpen(false)}
               >
                 {item.label}
               </Link>
             ))}
-            <Link
-              href="/book"
-              className="block w-full text-center mt-3 px-4 py-3 bg-[#00D4E8] text-[#061A2F] font-bold rounded-lg"
-              onClick={() => setIsOpen(false)}
-            >
-              Book Online
-            </Link>
           </div>
         </div>
       )}
