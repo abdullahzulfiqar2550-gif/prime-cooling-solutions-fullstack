@@ -10,6 +10,8 @@ const NAV_LINKS = [
   { label: 'Home', href: '/', active: true },
   { label: 'Services', href: '/services', hasDropdown: true },
   { label: 'AMC', href: '/amc' },
+  { label: 'Reviews', href: '/#reviews' },
+  { label: 'Areas We Serve', href: '/#areas' },
   { label: 'About', href: '/about' },
   { label: 'Track Booking', href: '/track' },
   { label: 'Contact', href: '/contact' },
@@ -39,7 +41,7 @@ export function Header() {
         </Link>
 
         {/* Desktop Navigation */}
-        <nav className="hidden lg:flex items-center h-full" style={{ gap: '38px' }}>
+        <nav className="hidden lg:flex items-center h-full" style={{ gap: '26px' }}>
           {NAV_LINKS.map((item) => (
             <Link
               key={item.label}

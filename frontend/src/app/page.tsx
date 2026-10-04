@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import React, { useState } from 'react';
 import Link from 'next/link';
@@ -49,6 +49,8 @@ import {
 } from 'lucide-react';
 import { COMPANY, SERVICES, WHY_CHOOSE_US, SERVICE_METHODOLOGY, CLIENT_SEGMENTS, AMC_DETAILS, AC_TYPES, TIME_SLOTS, REGIONS, PROPERTY_TYPES } from '@/lib/constants';
 import { supabase, generateBookingId } from '@/lib/supabase';
+import { ReviewSection } from '@/components/home/ReviewSection';
+import { ServiceAreas } from '@/components/home/ServiceAreas';
 
 /* â”€â”€â”€ Icon map for dynamic icon rendering (avoids import *) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 const ICON_MAP: Record<string, React.ComponentType<{ className?: string }>> = {
@@ -614,6 +616,12 @@ export default function HomePage() {
           </div>
         </div>
       </section>
+
+      {/* Section 3b: CUSTOMER REVIEWS */}
+      <ReviewSection />
+
+      {/* Section 3c: AREAS WE SERVE */}
+      <ServiceAreas />
 
       {/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
           Section 4: AMC HIGHLIGHT
