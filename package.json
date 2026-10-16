@@ -1,0 +1,14 @@
+{
+  "name": "prime-cooling-solutions",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Prime Cooling Solutions - run website/backend from the project root",
+  "scripts": {
+    "dev": "npm --prefix frontend run dev",
+    "build": "npm --prefix frontend run build",
+    "start": "npm --prefix frontend run start",
+    "lint": "npm --prefix frontend run lint",
+    "dev:backend": "npm --prefix backend-node run dev",
+    "install:all": "npm --prefix frontend install && npm --prefix backend-node install"
+  }
+}

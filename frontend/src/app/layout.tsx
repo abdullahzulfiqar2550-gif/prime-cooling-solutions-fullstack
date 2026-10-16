@@ -34,7 +34,7 @@ export default function RootLayout({
         <link rel="apple-touch-icon" href="/logo.png" />
       </head>
       <body className={`${inter.variable} font-sans min-h-screen flex flex-col antialiased`}>
-        <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={false}>
+        <ThemeProvider attribute="class" defaultTheme="light" enableSystem={false}>
           <EmergencyBanner />
           <Header />
           <main className="flex-grow">{children}</main>

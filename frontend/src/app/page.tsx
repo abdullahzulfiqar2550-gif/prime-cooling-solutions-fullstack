@@ -202,42 +202,6 @@ export default function HomePage() {
     document.getElementById('book-now')?.scrollIntoView({ behavior: 'smooth' });
   };
 
-  // â”€â”€ Quick booking form (hero sidebar) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-  const [quickName, setQuickName] = useState('');
-  const [quickPhone, setQuickPhone] = useState('');
-  const [quickService, setQuickService] = useState('');
-  const [quickMessage, setQuickMessage] = useState('');
-  const [quickSubmitting, setQuickSubmitting] = useState(false);
-  const [quickSuccess, setQuickSuccess] = useState('');
-
-  const handleQuickBooking = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setQuickSubmitting(true);
-    try {
-      const id = await generateBookingId();
-      const serviceTitle = SERVICES.find(s => s.id === quickService)?.title || quickService;
-      const { error } = await supabase.from('bookings').insert({
-        id,
-        service_package: serviceTitle,
-        customer_name: quickName,
-        phone: quickPhone,
-        symptoms_notes: quickMessage || null,
-        appliance: 'split',
-        unit_count: 1,
-        time_slot: 'morning',
-        region: 'kot_lakhpat',
-        address: 'To be confirmed',
-      });
-      if (error) throw error;
-      setQuickSuccess(id);
-      setQuickName(''); setQuickPhone(''); setQuickService(''); setQuickMessage('');
-    } catch (err: unknown) {
-      const message = err instanceof Error ? err.message : 'Unknown error';
-      alert(`Error: ${message}`);
-    } finally {
-      setQuickSubmitting(false);
-    }
-  };
 
   // â”€â”€ Stats (configurable business data) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   const STATS = [
@@ -248,7 +212,7 @@ export default function HomePage() {
   ];
 
   // â”€â”€ Promo config â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-  const PROMO = { enabled: true, discount: '30%', label: 'ON AMC PACKAGES', note: 'Limited Time Offer' };
+  const PROMO = { enabled: true, discount: '70%', label: 'ON AMC PACKAGES', note: 'Limited Time Offer' };
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -287,7 +251,7 @@ export default function HomePage() {
               style={{ border: '1px solid #00d9ff', background: 'rgba(0,23,43,0.4)', backdropFilter: 'blur(8px)', animation: 'badgeGlow 3s ease-in-out infinite' }}>
               <Snowflake className="w-5 h-5" />
               <span>Your Comfort</span>
-              <b className="text-white/70">â€¢</b>
+              <Snowflake className="w-3.5 h-3.5 text-white/60" />
               <span>Our Priority</span>
             </div>
 
@@ -302,7 +266,7 @@ export default function HomePage() {
             <p className="mt-[22px] text-[16px] leading-[1.55] max-w-[555px] text-white/95" style={{ textShadow: '0 2px 8px rgba(0,0,0,0.5)' }}>
               Stay cool, stay comfortable! We provide expert AC installation,
               repair and maintenance for homes and businesses across Lahore.
-              Fast, reliable and affordable service â€” always.
+              Fast, reliable and affordable service - always.
             </p>
 
             {/* Service Features Row */}
@@ -356,73 +320,7 @@ export default function HomePage() {
           </div>
 
 
-          {/* 3D AC UNIT (desktop only) — real hero-ac.png asset */}
-          <div className="hidden lg:block absolute z-[6]"
-            style={{ right: '14%', top: '12%', width: '520px', animation: 'acFloat 5s ease-in-out infinite' }}>
-            {/* Atmospheric cyan glow behind/below the AC */}
-            <div className="absolute bottom-[-30px] left-1/2 -translate-x-1/2 w-[380px] h-[180px] pointer-events-none"
-              style={{
-                background: 'radial-gradient(ellipse at center, rgba(0,217,255,0.12) 0%, rgba(0,180,255,0.05) 40%, transparent 70%)',
-                filter: 'blur(25px)',
-                animation: 'acGlow 3s ease-in-out infinite',
-              }} />
-            {/* Realistic 3D AC Image */}
-            <Image
-              src="/hero-ac.png"
-              alt="Premium 3D split AC unit with cold air flow"
-              width={520}
-              height={360}
-              className="w-full h-auto relative z-[2]"
-              style={{
-                filter: 'drop-shadow(0 25px 50px rgba(0,0,0,0.35)) drop-shadow(0 8px 20px rgba(0,180,255,0.12))',
-              }}
-              priority
-            />
-          </div>
 
-          {/* â”€â”€ FLOATING CARDS â”€â”€ */}
-          {/* 22Â°C */}
-          <div className="hidden lg:flex absolute z-[15] items-center gap-3 px-5 py-3 rounded-[35px]"
-            style={{ right: '34%', top: '20%', background: 'rgba(4,31,54,0.65)', border: '1px solid rgba(0,219,255,0.8)', backdropFilter: 'blur(12px)', boxShadow: '0 12px 30px rgba(0,0,0,0.25)', animation: 'cardFloat 4s ease-in-out infinite' }}>
-            <div className="w-[45px] h-[45px] rounded-full flex items-center justify-center text-[#00d9ff]">
-              <Snowflake className="w-[22px] h-[22px]" />
-            </div>
-            <div>
-              <strong className="text-[17px] block">22Â°C</strong>
-              <small className="text-white/75 text-[11px] block mt-0.5">Perfect Cooling</small>
-            </div>
-          </div>
-
-          {/* AMC */}
-          <div className="hidden lg:flex absolute z-[15] items-center gap-3 px-5 py-3 rounded-[35px]"
-            style={{ right: '19%', top: '20%', background: 'rgba(4,31,54,0.65)', border: '1px solid rgba(0,219,255,0.8)', backdropFilter: 'blur(12px)', boxShadow: '0 12px 30px rgba(0,0,0,0.25)', animation: 'cardFloat 4s ease-in-out infinite 1s' }}>
-            <div className="w-[45px] h-[45px] rounded-full flex items-center justify-center text-[#00d9ff]">
-              <Shield className="w-[22px] h-[22px]" />
-            </div>
-            <div>
-              <strong className="text-[17px] block">AMC Available</strong>
-              <small className="text-white/75 text-[11px] block mt-0.5">Stay Worry Free</small>
-            </div>
-          </div>
-
-          {/* Fast Response */}
-          <div className="hidden lg:flex absolute z-[15] items-center gap-3 px-5 py-3 rounded-[35px]"
-            style={{ right: '19%', top: '62%', background: 'rgba(4,31,54,0.65)', border: '1px solid rgba(0,219,255,0.8)', backdropFilter: 'blur(12px)', boxShadow: '0 12px 30px rgba(0,0,0,0.25)', animation: 'cardFloat 4s ease-in-out infinite 2s' }}>
-            <div className="w-[45px] h-[45px] rounded-full flex items-center justify-center text-[#00d9ff]">
-              <Zap className="w-[22px] h-[22px]" />
-            </div>
-            <div>
-              <strong className="text-[17px] block">Fast Response</strong>
-              <small className="text-white/75 text-[11px] block mt-0.5">Within 24 Hours</small>
-            </div>
-          </div>
-
-          {/* Decorative text */}
-          <div className="hidden lg:block absolute z-[5] pointer-events-none select-none" style={{ right: '28%', top: '55%' }}>
-            <p className="text-white/20 text-[28px] leading-tight italic" style={{ fontFamily: "'Georgia', serif" }}>
-              Cooler Spaces<br />Better Lives
-            </p>
-          </div>
 
           {/* â”€â”€ OFFER BADGE â”€â”€ */}
           {PROMO.enabled && (
@@ -440,68 +338,6 @@ export default function HomePage() {
             </div>
           )}
 
-          {/* â”€â”€ BOOKING CARD (desktop) â”€â”€ */}
-          <div className="hidden lg:block absolute z-[30]"
-            style={{ right: '3%', top: '27%', width: '255px', animation: 'bookingFloat 5s ease-in-out infinite' }}>
-            <div className="p-[17px] rounded-[17px] text-[#102c50]"
-              style={{ background: 'rgba(255,255,255,0.97)', boxShadow: '0 25px 60px rgba(0,0,0,0.35)' }}>
-
-              {quickSuccess ? (
-                <div className="text-center py-4">
-                  <div className="w-12 h-12 rounded-full bg-green-100 flex items-center justify-center mx-auto mb-3">
-                    <CheckCircle2 className="w-6 h-6 text-green-600" />
-                  </div>
-                  <strong className="text-[14px] block text-[#102c50]">Booking Confirmed!</strong>
-                  <p className="text-[11px] text-slate-500 mt-1">Ref: <span className="font-mono font-bold">{quickSuccess}</span></p>
-                  <button onClick={() => setQuickSuccess('')} className="text-[11px] text-[#00d9ff] font-semibold mt-2 hover:underline">Book Another</button>
-                </div>
-              ) : (
-                <form onSubmit={handleQuickBooking}>
-                  <div className="flex items-start gap-2.5 mb-3.5">
-                    <CalendarCheck className="w-5 h-5 text-[#00a9d5] mt-0.5 flex-shrink-0" />
-                    <div>
-                      <strong className="text-[14px] block">Quick Service Booking</strong>
-                      <small className="text-[9px] text-[#75869a] leading-snug block mt-0.5">Fill in your details and we&apos;ll get back to you</small>
-                    </div>
-                  </div>
-
-                  <div className="h-[35px] border border-[#d7e2ec] rounded-[7px] flex items-center px-2.5 mb-[9px] bg-white">
-                    <Eye className="w-3 h-3 text-[#2b81ae] mr-2 flex-shrink-0" />
-                    <input type="text" required placeholder="Full Name" value={quickName} onChange={e => setQuickName(e.target.value)}
-                      className="w-full border-none outline-none text-[10px] text-[#4c6780] bg-transparent" />
-                  </div>
-                  <div className="h-[35px] border border-[#d7e2ec] rounded-[7px] flex items-center px-2.5 mb-[9px] bg-white">
-                    <Phone className="w-3 h-3 text-[#2b81ae] mr-2 flex-shrink-0" />
-                    <input type="tel" required placeholder="Phone Number" value={quickPhone} onChange={e => setQuickPhone(e.target.value)}
-                      className="w-full border-none outline-none text-[10px] text-[#4c6780] bg-transparent" />
-                  </div>
-                  <div className="h-[35px] border border-[#d7e2ec] rounded-[7px] flex items-center px-2.5 mb-[9px] bg-white">
-                    <ShieldCheck className="w-3 h-3 text-[#2b81ae] mr-2 flex-shrink-0" />
-                    <select required value={quickService} onChange={e => setQuickService(e.target.value)}
-                      className="w-full border-none outline-none text-[10px] text-[#4c6780] bg-transparent">
-                      <option value="">Service Required</option>
-                      {SERVICES.map(s => <option key={s.id} value={s.id}>{s.title}</option>)}
-                    </select>
-                  </div>
-                  <div className="h-[58px] border border-[#d7e2ec] rounded-[7px] flex items-start px-2.5 pt-2 mb-[9px] bg-white">
-                    <MessageSquare className="w-3 h-3 text-[#2b81ae] mt-0.5 mr-2 flex-shrink-0" />
-                    <textarea placeholder="Your Message (Optional)" value={quickMessage} onChange={e => setQuickMessage(e.target.value)}
-                      rows={2} className="w-full border-none outline-none text-[10px] text-[#4c6780] bg-transparent resize-none h-[45px]" />
-                  </div>
-
-                  <button type="submit" disabled={quickSubmitting}
-                    className="w-full h-[40px] rounded-lg flex items-center justify-center gap-2.5 font-extrabold text-[#05243a] text-[12px] transition-all hover:-translate-y-0.5 disabled:opacity-50"
-                    style={{ background: 'linear-gradient(135deg, #00dff2, #00bddb)' }}>
-                    {quickSubmitting ? <><Loader2 className="w-3.5 h-3.5 animate-spin" /> Booking...</> : <>Book Now <ArrowRight className="w-3.5 h-3.5" /></>}
-                  </button>
-
-                  <p className="text-center mt-2 text-[#506a7d] text-[8px] flex items-center justify-center gap-1">
-                    <Shield className="w-2.5 h-2.5 text-[#0a638e]" /> We respect your privacy
-                  </p>
-                </form>
-              )}
-            </div>
-          </div>
         </div>
 
         {/* â”€â”€ Stats Bar â”€â”€ */}
@@ -521,39 +357,6 @@ export default function HomePage() {
           ))}
         </div>
 
-        {/* Mobile Booking Form */}
-        <div className="lg:hidden relative z-10 px-5 pt-[420px] pb-6">
-          <div className="bg-white rounded-2xl p-5 shadow-2xl text-[#102c50] max-w-sm mx-auto">
-            {quickSuccess ? (
-              <div className="text-center py-4">
-                <CheckCircle2 className="w-10 h-10 text-green-600 mx-auto mb-2" />
-                <strong className="block text-[#102c50]">Booking Confirmed!</strong>
-                <p className="text-sm text-slate-500">Ref: {quickSuccess}</p>
-                <button onClick={() => setQuickSuccess('')} className="text-[#00d9ff] text-sm font-bold mt-2">Book Another</button>
-              </div>
-            ) : (
-              <form onSubmit={handleQuickBooking} className="space-y-3">
-                <h3 className="font-bold text-[16px]">Quick Service Booking</h3>
-                <input type="text" required placeholder="Full Name" value={quickName} onChange={e => setQuickName(e.target.value)}
-                  className="w-full border border-slate-200 rounded-lg px-3 py-3 text-sm bg-white text-[#102c50] outline-none focus:ring-2 focus:ring-[#00d9ff]" />
-                <input type="tel" required placeholder="Phone Number" value={quickPhone} onChange={e => setQuickPhone(e.target.value)}
-                  className="w-full border border-slate-200 rounded-lg px-3 py-3 text-sm bg-white text-[#102c50] outline-none focus:ring-2 focus:ring-[#00d9ff]" />
-                <select required value={quickService} onChange={e => setQuickService(e.target.value)}
-                  className="w-full border border-slate-200 rounded-lg px-3 py-3 text-sm bg-white text-[#102c50] outline-none focus:ring-2 focus:ring-[#00d9ff]">
-                  <option value="">Service Required</option>
-                  {SERVICES.map(s => <option key={s.id} value={s.id}>{s.title}</option>)}
-                </select>
-                <textarea placeholder="Your Message (Optional)" value={quickMessage} onChange={e => setQuickMessage(e.target.value)}
-                  rows={2} className="w-full border border-slate-200 rounded-lg px-3 py-3 text-sm bg-white text-[#102c50] outline-none focus:ring-2 focus:ring-[#00d9ff] resize-none" />
-                <button type="submit" disabled={quickSubmitting}
-                  className="w-full py-3 rounded-lg font-bold text-[#05243a] flex items-center justify-center gap-2 disabled:opacity-50"
-                  style={{ background: 'linear-gradient(135deg, #00dff2, #00bddb)' }}>
-                  {quickSubmitting ? <><Loader2 className="w-4 h-4 animate-spin" /> Booking...</> : <>Book Now <ArrowRight className="w-4 h-4" /></>}
-                </button>
-              </form>
-            )}
-          </div>
-        </div>
       </section>
 
       {/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•

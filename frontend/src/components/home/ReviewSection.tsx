@@ -121,17 +121,17 @@ export function ReviewSection() {
   };
 
   return (
-    <section id="reviews" aria-labelledby="reviews-heading" className="py-20 bg-slate-50 dark:bg-slate-950 scroll-mt-24 overflow-hidden">
+    <section id="reviews" aria-labelledby="reviews-heading" className="py-20 bg-[#031b31] text-white scroll-mt-24 overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="text-center mb-10">
           <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#00d9ff]/10 text-[#078dc8] text-sm font-semibold mb-4">
             <Star className="w-4 h-4 fill-current" aria-hidden="true" /> Trusted by customers across Lahore
           </span>
-          <h2 id="reviews-heading" className="text-3xl md:text-4xl font-bold text-slate-900 dark:text-white mb-4">
+          <h2 id="reviews-heading" className="text-3xl md:text-4xl font-bold text-white mb-4">
             What Our Customers Say
           </h2>
-          <p className="text-lg text-slate-600 dark:text-slate-400 max-w-3xl mx-auto">
+          <p className="text-lg text-white/70 max-w-3xl mx-auto">
             From residential AC repair to commercial HVAC maintenance, our customers trust Prime Cooling Solutions for
             professional, reliable and timely cooling services.
           </p>
